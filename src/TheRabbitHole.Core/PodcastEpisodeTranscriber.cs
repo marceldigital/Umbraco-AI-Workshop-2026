@@ -109,12 +109,17 @@ public class PodcastEpisodeTranscriber(PodcastEpisodeQueue queue, IServiceScopeF
                 "You are a podcast producer. Given a raw transcript, write a concise 1–2 sentence summary of the episode " +
                 "suitable for a listing card. Respond with plain text only — no markdown, no HTML, no quotes.\n" +
                 "\n" +
+                "IMPORTANT do NOT rely on names that appear in the transcript. Use the get_episode_guests tool to " +
+                "resolve guest names and details based on the episode's content key, and refer to guests by their " +
+                "canonical names from the tool results.\n" +
+                "\n" +
                 "## Episode Context\n" +
-                $"Episode Key: {contentKey}";
+                $"Episode Key: {contentKey} (use this to query the get_episode_guests tool)";
 
             var summaryResponse = await chat.GetChatResponseAsync(
                 b => b.WithAlias("podcast-episode-summary")
-                    .WithProfile("podcast-profile"),
+                    .WithProfile("podcast-profile")
+                    .WithTools("get_episode_guests"),
                 [
                     new ChatMessage(ChatRole.System, summaryPrompt),
                     new ChatMessage(ChatRole.User, transcript)
@@ -135,12 +140,17 @@ public class PodcastEpisodeTranscriber(PodcastEpisodeQueue queue, IServiceScopeF
                 "\n" +
                 "If a previous episode is mentioned, include it and link it to the show, but only if you know the URL.\n" +
                 "\n" +
+                "IMPORTANT do NOT rely on names that appear in the transcript. Use the get_episode_guests tool to " +
+                "resolve guest names and details based on the episode's content key, and refer to guests by their " +
+                "canonical names from the tool results.\n" +
+                "\n" +
                 "## Episode Context\n" +
-                $"Episode Key: {contentKey}";
+                $"Episode Key: {contentKey} (use this to query the get_episode_guests tool)";
 
             var showNotesResponse = await chat.GetChatResponseAsync(
                 b => b.WithAlias("podcast-episode-show-notes")
-                    .WithProfile("podcast-profile"),
+                    .WithProfile("podcast-profile")
+                    .WithTools("get_episode_guests"),
                 [
                     new ChatMessage(ChatRole.System, showNotesPrompt),
                     new ChatMessage(ChatRole.User, transcript)
