@@ -1,7 +1,7 @@
 using System.ComponentModel;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Umbraco.AI.Core.Tools;
+using Umbraco.Cms.Core.Events;
 using Umbraco.Cms.Core.Services;
 
 namespace TheRabbitHole.Core.Tools;
@@ -19,20 +19,21 @@ public sealed record PublishEpisodeReportArgs(
     string? RelatedEpisodeTitle);
 
 // This tool exists as the agent's completion signal: calling it is the only way to report "episode ready"
-// and deliver the structured report data to connected backoffice clients. It's hand-rolled plumbing — the
-// kind of thing Umbraco.Automate would replace with a content-state workflow, leaving just the AI work here.
+// and deliver the structured report data. Rather than pushing a SignalR message itself (Lesson 5), it now
+// announces a domain event. The PodcastEpisodeProducedTrigger surfaces that event in Umbraco Automate, so the
+// reactions (toasts, emails, Slack…) become automations that editors compose in the UI.
 [AITool("publish_episode_report", "Publish Episode Report", ScopeId = "podcast")]
 public sealed class PublishEpisodeReportTool : EpisodeToolBase<PublishEpisodeReportArgs>
 {
-    private readonly IHubContext<PodcastHub> _hub;
+    private readonly IEventAggregator _eventAggregator;
     private readonly ILogger<PublishEpisodeReportTool> _logger;
 
     public PublishEpisodeReportTool(
         IContentService contentService,
-        IHubContext<PodcastHub> hub,
+        IEventAggregator eventAggregator,
         ILogger<PublishEpisodeReportTool> logger) : base(contentService)
     {
-        _hub = hub;
+        _eventAggregator = eventAggregator;
         _logger = logger;
     }
 
@@ -53,10 +54,15 @@ public sealed class PublishEpisodeReportTool : EpisodeToolBase<PublishEpisodeRep
             "Publishing episode report for {Id}: {Title} (guests: {GuestCount}, related: {Related})",
             args.EpisodeKey, args.EpisodeTitle, args.GuestNames.Length, args.RelatedEpisodeTitle ?? "none");
 
-        await _hub.Clients.All.SendAsync(
-            "episodeProcessed",
-            args.EpisodeKey,
-            args.EpisodeTitle,
+        // Announce the domain event. This code no longer knows or cares what the reactions are —
+        // that's configured in the Automation section.
+        await _eventAggregator.PublishAsync(
+            new PodcastEpisodeProducedNotification(
+                args.EpisodeKey,
+                args.EpisodeTitle,
+                args.Summary,
+                args.GuestNames,
+                args.RelatedEpisodeTitle),
             cancellationToken);
 
         return new { Success = true };

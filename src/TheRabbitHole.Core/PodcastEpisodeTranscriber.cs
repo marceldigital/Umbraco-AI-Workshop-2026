@@ -58,9 +58,12 @@ public class PodcastEpisodeTranscriber(PodcastEpisodeQueue queue, IServiceScopeF
     // The main processing logic: transcribe the audio, generate show notes, save to Umbraco, and notify clients via SignalR.
     private async Task ProcessAsync(Guid contentKey, CancellationToken ct)
     {
-        // Lesson 5: hand the whole job to the agent instead of our hand-rolled steps.
+        // Lesson 6: Umbraco Automate now runs the agent (see the "Podcast Production" automation),
+        // so this hand-rolled path is switched off. In a real project you'd delete the queue,
+        // the save handler and the SignalR hub at this point.
         // await ProcessManualAsync(contentKey, ct);
-        await ProcessAgentAsync(contentKey, ct);
+        // await ProcessAgentAsync(contentKey, ct);
+        await Task.CompletedTask;
     }
 
     private async Task ProcessManualAsync(Guid contentKey, CancellationToken ct)
