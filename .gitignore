@@ -75,3 +75,7 @@ src/TheRabbitHole.Web/appsettings.*.json
 ## OS detritus
 .DS_Store
 Thumbs.db
+
+## DocFX build output (docs/ on main)
+docs/_site/
+docs/obj/
