@@ -133,6 +133,8 @@ public class PodcastEpisodeTranscriber(PodcastEpisodeQueue queue, IServiceScopeF
                 "a short overview paragraph, a bulleted list of key topics, and any resources or guests mentioned. " +
                 "Respond with valid HTML only — no markdown, no code fences, no <html>/<body> wrappers.\n" +
                 "\n" +
+                "If a previous episode is mentioned, include it and link it to the show, but only if you know the URL.\n" +
+                "\n" +
                 "## Episode Context\n" +
                 $"Episode Key: {contentKey}";
 
