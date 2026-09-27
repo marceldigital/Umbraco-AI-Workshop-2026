@@ -52,7 +52,7 @@ dotnet restore
 ```
 
 > [!TIP]
-> Did the warm-up from the email? Then this takes seconds, because everything is already in your NuGet cache.
+> Built an Umbraco 17 site recently? Then much of this is already in your NuGet cache, and the restore is quicker.
 
 ### 3. Switch to the starting point
 
