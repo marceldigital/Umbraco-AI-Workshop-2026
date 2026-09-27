@@ -51,9 +51,6 @@ git checkout main
 dotnet restore
 ```
 
-> [!TIP]
-> Built an Umbraco 17 site recently? Then much of this is already in your NuGet cache, and the restore is quicker.
-
 ### 3. Switch to the starting point
 
 ```bash
@@ -64,8 +61,7 @@ git checkout init
 
 ### 4. Trust the .NET development certificate
 
-The site runs on HTTPS locally. If you haven't already, trust the development certificate so your browser doesn't
-complain:
+The site runs on HTTPS locally. Trust the development certificate so your browser doesn't complain:
 
 ```bash
 dotnet dev-certs https --trust
@@ -101,8 +97,7 @@ https://localhost:44339` it's ready.
 You need three values: an **API key**, a **chat endpoint** and a **transcription endpoint**. Where they come from depends on
 your path:
 
-- **Your own OpenAI or Microsoft Foundry key:** you set it up from the email before the festival. The endpoints are
-  below.
+- **Brought your own OpenAI or Microsoft Foundry key?** Use it with the endpoints in the tabs below.
 - **No key yet?** Tell Alex now. You'll get the workshop key by email through a 1Password link.
 - **Want to set up your own account now?** [Bring your AI key](../ai-key.md) has the steps, but adding billing or deploying
   models takes a while. The workshop key gets you going straight away.
