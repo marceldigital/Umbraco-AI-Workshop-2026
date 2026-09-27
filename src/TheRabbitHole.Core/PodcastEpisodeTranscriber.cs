@@ -1,8 +1,11 @@
 using System.Net;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Umbraco.AI.Core.Chat;
+using Umbraco.AI.Core.SpeechToText;
 using Umbraco.Cms.Core.IO;
 using Umbraco.Cms.Core.PropertyEditors;
 using Umbraco.Cms.Core.Serialization;
@@ -59,8 +62,103 @@ public class PodcastEpisodeTranscriber(PodcastEpisodeQueue queue, IServiceScopeF
 
     private async Task ProcessManualAsync(Guid contentKey, CancellationToken ct)
     {
-        // Lesson 2: transcribe the episode, write a summary and show notes, then save and notify.
-        await Task.CompletedTask;
+        // Create a new scope to resolve services for this unit of work, ensuring we have a clean context
+        // for Umbraco services and AI clients.
+        using var scope = scopeFactory.CreateScope();
+        var sp = scope.ServiceProvider;
+        var contentService = sp.GetRequiredService<IContentService>();
+        var mediaFileManager = sp.GetRequiredService<MediaFileManager>();
+        var stt = sp.GetRequiredService<IAISpeechToTextService>();
+        var chat = sp.GetRequiredService<IAIChatService>();
+        var jsonSerializer = sp.GetRequiredService<IJsonSerializer>();
+
+        // Load the content item to process. We have the content key from the queue, but we need to load the full item
+        var content = contentService.GetById(contentKey);
+        if (content is null)
+            return;
+
+        bool contentHasChanged = false;
+
+        // Check if the episode has already been processed (e.g. if a transcript already exists) to avoid duplicate work.
+        string transcript = content.GetValue<string>("transcript") ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(transcript))
+        {
+            var audioPath = content.GetValue<string>("audioFile");
+            if (string.IsNullOrWhiteSpace(audioPath))
+                return;
+
+            logger.LogInformation("Transcribing podcast episode {Id}", contentKey);
+
+            await using var audio = mediaFileManager.FileSystem.OpenFile(audioPath);
+            var sttResponse = await stt.TranscribeAsync(
+                b => b.WithAlias("podcast-episode-transcription"),
+                audio, ct);
+            transcript = sttResponse.Text;
+
+            content.SetValue("transcript", transcript);
+            contentHasChanged = true;
+        }
+
+        if (string.IsNullOrWhiteSpace(transcript))
+            return;
+
+        var summary = content.GetValue<string>("summary") ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(summary))
+        {
+            string summaryPrompt =
+                "You are a podcast producer. Given a raw transcript, write a concise 1–2 sentence summary of the episode " +
+                "suitable for a listing card. Respond with plain text only — no markdown, no HTML, no quotes.\n" +
+                "\n" +
+                "## Episode Context\n" +
+                $"Episode Key: {contentKey}";
+
+            var summaryResponse = await chat.GetChatResponseAsync(
+                b => b.WithAlias("podcast-episode-summary")
+                    .WithProfile("podcast-profile"),
+                [
+                    new ChatMessage(ChatRole.System, summaryPrompt),
+                    new ChatMessage(ChatRole.User, transcript)
+                ], ct);
+
+            summary = summaryResponse.Text;
+            content.SetValue("summary", summary);
+            contentHasChanged = true;
+        }
+
+        var showNotes = content.GetValue<string>("showNotes") ?? string.Empty;
+        if (IsRichTextEmpty(showNotes, jsonSerializer))
+        {
+            string showNotesPrompt =
+                "You are a podcast producer. Given a raw transcript, write HTML show notes for publication: " +
+                "a short overview paragraph, a bulleted list of key topics, and any resources or guests mentioned. " +
+                "Respond with valid HTML only — no markdown, no code fences, no <html>/<body> wrappers.\n" +
+                "\n" +
+                "## Episode Context\n" +
+                $"Episode Key: {contentKey}";
+
+            var showNotesResponse = await chat.GetChatResponseAsync(
+                b => b.WithAlias("podcast-episode-show-notes")
+                    .WithProfile("podcast-profile"),
+                [
+                    new ChatMessage(ChatRole.System, showNotesPrompt),
+                    new ChatMessage(ChatRole.User, transcript)
+                ], ct);
+
+            showNotes = showNotesResponse.Text;
+            content.SetValue("showNotes", showNotes);
+            contentHasChanged = true;
+        }
+
+        // Save the transcript, summary and show notes back to the content item.
+        if (contentHasChanged)
+        {
+            contentService.Save(content);
+            logger.LogInformation("Podcast episode {Id} transcribed, summarised and show notes saved", contentKey);
+
+            // Notify any connected backoffice clients that this episode has been processed,
+            // so they can update the UI in real time if needed.
+            await hub.Clients.All.SendAsync("episodeProcessed", contentKey, content.Name, ct);
+        }
     }
 
     // The Tiptap rich-text editor persists even a manually cleared field as a JSON envelope
