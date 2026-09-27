@@ -21,7 +21,8 @@ workshop needs already in your local cache.
 > The lessons use `dotnet` CLI commands so they work in any editor on any OS. If you prefer Visual Studio or Rider, go for
 > it. You'll just translate the commands into your IDE.
 
-You **don't** need an AI provider account. We'll hand out an API key on the day.
+You'll also need an **AI key**: your own **OpenAI** or **Microsoft Foundry** key if you can bring one, or our backup
+workshop key if you can't. Step 7 covers it.
 
 ## Steps
 
@@ -83,11 +84,19 @@ https://localhost:44339` it's ready.
    - **Email:** `admin@example.com`
    - **Password:** `password1234`
 
+### 7. Get your AI key ready
+
+Follow **[Bring your AI key](../ai-key.md)** to set up an OpenAI or Microsoft Foundry key, or to ask for the backup workshop
+key. Setting up your own account can take a while (adding billing, deploying models), so do it before the day. That
+page also shows how to save your key as a user secret now, so Lesson 1 goes even faster.
+
 ## ✅ Checkpoint
 
 - ⬜ The homepage lists 4 episodes, including **The 500th Question**.
 - ⬜ You can log in to the backoffice, and **Content → Home → Episodes** shows the same 4 episodes.
 - ⬜ The top navigation has *no* **AI** section yet. That's what we'll add in Lesson 1.
+- ⬜ You have your three AI values ready (API key, chat endpoint, transcription endpoint), or you've asked for the workshop
+  key.
 
 You're ready. See you at the workshop! 🐇
 

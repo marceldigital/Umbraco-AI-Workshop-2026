@@ -1,7 +1,107 @@
-/* Light-touch overrides for the DocFX "modern" template. Keep this file small. */
+/* Light-touch overrides for the DocFX "modern" template. Keep this file small.
+   Colours follow the Umbraco US Festival 2026 site (umbracofestival.us): teal, lime and navy.
+   Text colours are darkened/lightened where needed so body text and links stay WCAG AA readable. */
 
 :root {
-  --workshop-accent: #3544b1; /* Umbraco-ish blue */
+  --fest-teal: #12a4b4;       /* festival primary */
+  --fest-teal-deep: #0e7c89;  /* teal for text on white (AA) */
+  --fest-teal-light: #99e1e6;
+  --fest-lime: #d2dd06;       /* festival highlight: accents only, never text on white */
+  --fest-navy: #253551;
+  --fest-navy-deep: #1d263a;
+  --workshop-accent: var(--fest-lime);
+}
+
+[data-bs-theme="light"] {
+  --bs-link-color: var(--fest-teal-deep);
+  --bs-link-color-rgb: 14, 124, 137;
+  --bs-link-hover-color: #0a5f69;
+  --bs-link-hover-color-rgb: 10, 95, 105;
+  --bs-heading-color: var(--fest-navy);
+  --bs-primary: var(--fest-teal-deep);
+  --bs-primary-rgb: 14, 124, 137;
+  --bs-code-color: #3a4a6e;
+}
+
+[data-bs-theme="dark"] {
+  --bs-body-bg: #141c29;
+  --bs-body-bg-rgb: 20, 28, 41;
+  --bs-body-color: #e0e0db;
+  --bs-body-color-rgb: 224, 224, 219;
+  --bs-tertiary-bg: var(--fest-navy-deep);
+  --bs-tertiary-bg-rgb: 29, 38, 58;
+  --bs-secondary-bg: #23304a;
+  --bs-border-color: #2e3b55;
+  --bs-link-color: #5ccad5;
+  --bs-link-color-rgb: 92, 202, 213;
+  --bs-link-hover-color: var(--fest-teal-light);
+  --bs-link-hover-color-rgb: 153, 225, 230;
+  --bs-heading-color: #ffffff;
+  --bs-primary: var(--fest-teal);
+  --bs-primary-rgb: 18, 164, 180;
+  --bs-code-color: #e3e98a;
+}
+
+/* The festival's teal-to-lime swoosh, as a strip across the top of every page. */
+header {
+  border-top: 4px solid transparent;
+  border-image: linear-gradient(90deg, var(--fest-teal) 0%, var(--fest-teal) 55%, var(--fest-lime) 100%) 1;
+}
+
+.navbar-brand {
+  color: var(--fest-navy);
+  font-weight: 600;
+}
+
+[data-bs-theme="dark"] .navbar-brand {
+  color: #ffffff;
+}
+
+/* Buttons (the "Start with Lesson 0" call to action). */
+.btn-primary {
+  --bs-btn-bg: var(--fest-teal-deep);
+  --bs-btn-border-color: var(--fest-teal-deep);
+  --bs-btn-hover-bg: var(--fest-navy);
+  --bs-btn-hover-border-color: var(--fest-navy);
+  --bs-btn-active-bg: var(--fest-navy);
+  --bs-btn-active-border-color: var(--fest-navy);
+  --bs-btn-color: #ffffff;
+  --bs-btn-hover-color: #ffffff;
+}
+
+[data-bs-theme="dark"] .btn-primary {
+  --bs-btn-bg: var(--fest-teal);
+  --bs-btn-border-color: var(--fest-teal);
+  --bs-btn-color: var(--fest-navy-deep);
+  --bs-btn-hover-bg: var(--fest-lime);
+  --bs-btn-hover-border-color: var(--fest-lime);
+  --bs-btn-hover-color: var(--fest-navy-deep);
+}
+
+/* Sidebar table of contents: mark the current page with a lime bar. */
+.toc li.active:not(:has(li.active)) > a {
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 var(--fest-lime);
+  padding-left: .5rem;
+}
+
+/* Tabs (the OpenAI / Foundry / workshop key choices): selected tab gets the festival teal. */
+.tabGroup a[role="tab"][aria-selected="true"] {
+  border-bottom-color: var(--fest-teal) !important;
+  color: var(--bs-link-color);
+}
+
+/* NOTE alerts in festival teal instead of Bootstrap's cyan. */
+[data-bs-theme="light"] .alert-info {
+  --bs-alert-color: #0b4f58;
+  --bs-alert-bg: #e8f6f8;
+  --bs-alert-border-color: #b3e3e8;
+}
+
+[data-bs-theme="dark"] .alert-info {
+  --bs-alert-color: #c4ecf0;
+  --bs-alert-bg: rgba(18, 164, 180, .12);
+  --bs-alert-border-color: rgba(18, 164, 180, .4);
 }
 
 /* Navbar logo: the Rabbit Hole wordmark is black, so invert it in dark mode. */

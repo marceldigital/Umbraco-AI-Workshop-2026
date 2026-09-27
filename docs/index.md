@@ -6,7 +6,7 @@ description: Step-by-step lessons for the "Beyond the Chatbot - Building Extensi
 # Beyond the Chatbot: Building Extensible AI Workflows in Umbraco
 
 A hands-on workshop at **Umbraco US Festival 2026**, Wednesday, September 30.
-Part 1 runs 1:00–3:00, then a break, then Part 2 runs 3:20–4:40.
+Part 1 runs 12:55–3:00, then a break, then Part 2 runs 3:20–4:40.
 
 ## The premise
 
@@ -23,6 +23,7 @@ hand-written calls with an agent, and finally let **Umbraco Automate** run the w
 | Time | Segment | Min |
 |---|---|---|
 | **Part 1** | | |
+| 12:55 | Settle in: open the `init` branch and your AI key | 5 |
 | 1:00 | Lecture 1: Welcome & the landscape *(boot the `init` branch while we talk)* | 12 |
 | 1:12 | Lecture 2: Umbraco AI building blocks | 8 |
 | 1:20 | [**Lesson 1:** Install & configure Umbraco AI](lessons/lesson-1.md) | 20 |
@@ -70,6 +71,7 @@ Fell behind, or something broke? Checking out a lesson's end branch catches you 
 
 ## Start here
 
-Before the day, set up your machine and warm your NuGet cache, so conference Wi-Fi can't slow you down.
+Before the day, set up your machine and warm your NuGet cache, so conference Wi-Fi can't slow you down. Then
+[bring your AI key](ai-key.md): your own OpenAI or Microsoft Foundry key, or our backup workshop key.
 
 <p><a class="btn btn-primary btn-lg" href="lessons/lesson-0.md">Start with Lesson 0: Before the workshop →</a></p>

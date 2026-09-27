@@ -638,7 +638,7 @@ Where did the Brand Voice come in? You never mentioned it in C#. Let's look at w
 1. Go to **AI → Logs**. The run created three entries, newest first:
    - the **show notes** chat call: Feature **Inline-Chat**, Profile **Podcast-Profile**, Model `gpt-4.1`
    - the **summary** chat call: also **Inline-Chat** on the Podcast Profile
-   - the **transcription**: Feature **Inline-Speech-To-Text**, Profile **Transcriber-Profile**, Model `gpt-transcribe`
+   - the **transcription**: Feature **Inline-Speech-To-Text**, Profile **Transcriber-Profile**, Model `gpt-4o-transcribe`
 
    You can't search the list for your call aliases. Instead, under each Feature name there's an **ID that Umbraco AI
    derives from your call alias**, so every call from the same `WithAlias(...)` line always gets the same ID. In the dry
@@ -646,7 +646,7 @@ Where did the Brand Voice come in? You never mentioned it in C#. Let's look at w
    rest of the workshop. You can also tell the two chat calls apart by **Tokens** (input / output): the show notes call has
    far more output tokens (the dry run had about 1,100 / 380 for the show notes against 1,100 / 64 for the summary).
 
-![The AI Logs list with the three entries from one run: two Inline-Chat calls on gpt-4.1 and one Inline-Speech-To-Text call on gpt-transcribe](../images/lesson-2/05-logs-list.png)
+![The AI Logs list with the three entries from one run: two Inline-Chat calls on gpt-4.1 and one Inline-Speech-To-Text call on gpt-4o-transcribe](../images/lesson-2/05-logs-list.png)
 
 2. Look at the transcription entry's **Profile**: the Transcriber Profile. Your code never named it. That's the default
    from Settings at work.
@@ -700,10 +700,12 @@ tells you what went wrong. The usual suspects:
 
 - **No default speech-to-text profile.** The transcription call doesn't name a profile, so it needs a default. Set
   **Transcriber Profile** in **AI → Settings** ([Lesson 1, Step 11](lesson-1.md#step-11-set-the-default-speech-to-text-profile)).
-- **The transcription connection.** Transcription goes through the **Workshop Transcription** connection, which must
-  point at the `gpt-transcribe` deployment URL, not the regular `/openai/v1/` endpoint
-  ([Lesson 1, Step 8](lesson-1.md#step-8-create-the-transcription-connection-and-the-transcriber-profile)).
-- **The API key isn't found.** Check it's stored under exactly `Umbraco:AI:Secrets:ApiKey`, then restart the site:
+- **The transcription connection.** Transcription goes through the **Workshop Transcription** connection, whose endpoint
+  must be `$Umbraco:AI:Variables:TranscriptionEndpoint`
+  ([Lesson 1, Step 8](lesson-1.md#step-8-create-the-transcription-connection-and-the-transcriber-profile)). On Foundry
+  or the workshop key, that user secret must be the transcription **deployment** URL, not the `/openai/v1/` endpoint.
+- **A user secret is missing.** Check the key is stored under exactly `Umbraco:AI:Secrets:ApiKey` and both endpoints
+  under `Umbraco:AI:Variables`, then restart the site. (This prints your key, so not on a shared screen.)
 
   ```bash
   dotnet user-secrets list --project src/TheRabbitHole.Web
@@ -723,7 +725,9 @@ Then clear the fields that are still empty (they probably all are), and **Save**
   starting the site. User secrets are read at startup, so restart after changing them. Also check that the **OpenAI API
   Key** field on both connections, **Workshop** and **Workshop Transcription**, is exactly `$Umbraco:AI:Secrets:ApiKey`.
 - **403 Forbidden** means the key works but isn't allowed to use that model or deployment. Check the model on both
-  profiles, and ask a helper if it still fails.
+  profiles. On OpenAI, check your project's model permissions; on your own Foundry, check both deployments exist.
+- **429 Too Many Requests** on OpenAI with *"You exceeded your current quota"* means the account has no credit. Add some
+  under **Settings → Billing**. Any other 429 is a rate limit: wait a few seconds, clear the fields and save again.
 
 </details>
 

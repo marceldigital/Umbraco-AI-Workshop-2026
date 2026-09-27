@@ -7,6 +7,8 @@
   items:
   - name: "Lesson 0: Before the workshop"
     href: lessons/lesson-0.md
+  - name: Bring your AI key
+    href: ai-key.md
 - name: "Part 1: Services and contexts"
   expanded: true
   items:

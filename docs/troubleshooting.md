@@ -4,8 +4,9 @@
 
 Use this when a lesson's time is up, or when something is broken and you want a known-good starting point. Every
 `lesson-N-end` branch contains the finished code for that lesson **and** a database snapshot with its backoffice
-configuration, so checking it out really does catch you up. Your API key is stored in user secrets, outside the
-repository, so it comes with you.
+configuration, so checking it out really does catch you up. Your API key and endpoints are stored in user secrets,
+outside the repository, so they come with you. The snapshots only hold references to them, so they work whichever AI
+provider you use.
 
 The short version (replace `3` with the lesson you want):
 
@@ -154,10 +155,33 @@ Work through these in order:
 2. **Is there anything left to do?** The code only generates what's missing. If the transcript, summary and show notes are
    all filled in, clear the ones you want regenerated and save again.
 3. **Look at the terminal** running the site. Search for `Failed to process podcast episode` and read the exception
-   underneath. Common causes: a missing or wrong API key in user secrets, the Transcriber Profile not set as the default
-   Speech-to-Text profile, or a profile alias typo (`podcast-profile`).
+   underneath. Common causes: a missing or wrong user secret (the key or either endpoint), the Transcriber Profile not
+   set as the default Speech-to-Text profile, or a profile alias typo (`podcast-profile`). See
+   [AI provider errors](#ai-provider-errors).
 4. **From Lesson 6 on:** Automate only sees *published* content, so use **Save and publish**. Then check the automation's
    **Runs** tab in the Automation section.
+
+## AI provider errors
+
+Every AI call reads three user secrets: `Umbraco:AI:Secrets:ApiKey`, `Umbraco:AI:Variables:ChatEndpoint` and
+`Umbraco:AI:Variables:TranscriptionEndpoint`. Most provider errors come down to one of them. Check they're all there
+(this prints your key, so not on a shared screen):
+
+```bash
+dotnet user-secrets list --project src/TheRabbitHole.Web
+```
+
+User secrets are read at startup, so **restart the site** after changing one.
+
+| Error | Likely cause |
+|---|---|
+| `401 Unauthorized` | The key is wrong, or it's for a different provider than your endpoints. An OpenAI key won't work on Foundry. |
+| `429` with *"You exceeded your current quota"* | Your OpenAI account has no credit. Add some under **Settings → Billing**. |
+| `429` otherwise | A rate limit. Wait a few seconds and try again. |
+| `DeploymentNotFound` / "deployment not found" | On Foundry, the deployments must be named exactly `gpt-4.1` and `gpt-4o-transcribe`, and the Podcast Profile must use **GPT 4.1**. |
+| `Configuration key '…' is not permitted` | A connection references something outside `Umbraco:AI:Secrets` or `Umbraco:AI:Variables`. |
+
+The [Bring your AI key](ai-key.md) page has the exact values for each path.
 
 ## Where are the logs?
 

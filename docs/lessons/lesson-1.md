@@ -9,7 +9,7 @@
 
 Install Umbraco AI into The Rabbit Hole and set up the building blocks the rest of the workshop depends on:
 
-- a **connection** to our AI provider
+- a **connection** to your AI provider: OpenAI, Microsoft Foundry, or the workshop key
 - a **chat profile** and a **speech-to-text profile**
 - a **Brand Voice** context so everything the AI writes sounds like the show
 
@@ -20,7 +20,7 @@ No C# yet (apart from one line in a project file). This lesson is all about the 
 
 - `src/TheRabbitHole.Web/TheRabbitHole.Web.csproj`: add the `Umbraco.AI` and `Umbraco.AI.OpenAI` packages
 - `src/TheRabbitHole.Core/TheRabbitHole.Core.csproj`: add `Umbraco.AI.Core` and suppress `MEAI001`
-- **User secrets:** store the workshop API key (outside the repo)
+- **User secrets:** store your API key and two endpoints (outside the repo)
 - **Backoffice → AI:** two connections, two profiles, one context, and one setting
 
 ## Steps
@@ -52,7 +52,8 @@ dotnet add src/TheRabbitHole.Core package Umbraco.AI.Core --version 17.3.5
 > [!NOTE]
 > **Why the OpenAI provider?** Umbraco AI is provider-agnostic, but providers differ in what they can do. Today only the
 > OpenAI provider supports **speech-to-text**, which we need in Lesson 2. It also isn't limited to api.openai.com: it
-> works with any OpenAI-compatible endpoint, including Microsoft Foundry's. That's what the workshop key uses.
+> works with any OpenAI-compatible endpoint, including Microsoft Foundry's. So the same provider serves all three
+> [key paths](../ai-key.md): OpenAI, your own Foundry, and the workshop key (which runs on Foundry).
 
 > [!TIP]
 > Did Lesson 0? These packages come straight from your local NuGet cache, so this is instant.
@@ -76,24 +77,84 @@ Open **`src/TheRabbitHole.Core/TheRabbitHole.Core.csproj`** and add the `NoWarn`
     </PropertyGroup>
 ```
 
-### Step 4: Store the API key as a user secret
+### Step 4: Store your key and endpoints as user secrets
 
 API keys never go in the repo or the database. Umbraco AI connection settings can instead **reference configuration**
 with a `$` prefix, for example `$Umbraco:AI:Secrets:ApiKey`, and resolve the real value at runtime from appsettings,
 environment variables, a key vault, or (for local development) **.NET user secrets**.
 
-Store the workshop key (we'll show it on screen) as a user secret for the web project:
+We'll use references for three values. The **API key** goes under `Umbraco:AI:Secrets`, because it's sensitive. The two
+**endpoints** go under `Umbraco:AI:Variables`. They aren't secret, but they differ from person to person: yours point at
+OpenAI or at a Foundry resource. Keeping them in configuration means the same backoffice setup works for everyone, and
+it's why every lesson branch's database snapshot works on your machine, whichever provider you use.
+
+> [!TIP]
+> Already saved them from the [Bring your AI key](../ai-key.md) page? Then skip to Step 5.
+
+Pick your path and run the three commands from the repo root. Replace the key placeholder with your own key.
+
+# [OpenAI](#tab/openai)
 
 ```bash
-dotnet user-secrets set "Umbraco:AI:Secrets:ApiKey" "<paste-the-workshop-key-here>" --project src/TheRabbitHole.Web
+dotnet user-secrets set "Umbraco:AI:Secrets:ApiKey" "<your-openai-key>" --project src/TheRabbitHole.Web
 ```
 
-> [!IMPORTANT]
-> The key **must** live under `Umbraco:AI:Secrets` (or `Umbraco:AI:Variables`). For security, Umbraco AI only resolves `$`
-> references under those allowed prefixes. Any other path fails with *"Configuration key … is not permitted"*.
+```bash
+dotnet user-secrets set "Umbraco:AI:Variables:ChatEndpoint" "https://api.openai.com/v1/" --project src/TheRabbitHole.Web
+```
 
-User secrets are stored in your user profile, not in the repo. So the key stays with you when you switch lesson branches,
-and it can never be committed by accident.
+```bash
+dotnet user-secrets set "Umbraco:AI:Variables:TranscriptionEndpoint" "https://api.openai.com/v1/" --project src/TheRabbitHole.Web
+```
+
+On OpenAI, one endpoint serves both chat and transcription, so both variables get the same value.
+
+# [Microsoft Foundry](#tab/foundry)
+
+Replace `<your-resource>` with your Foundry resource name.
+
+```bash
+dotnet user-secrets set "Umbraco:AI:Secrets:ApiKey" "<your-foundry-key>" --project src/TheRabbitHole.Web
+```
+
+```bash
+dotnet user-secrets set "Umbraco:AI:Variables:ChatEndpoint" "https://<your-resource>.services.ai.azure.com/openai/v1/" --project src/TheRabbitHole.Web
+```
+
+```bash
+dotnet user-secrets set "Umbraco:AI:Variables:TranscriptionEndpoint" "https://<your-resource>.services.ai.azure.com/openai/deployments/gpt-4o-transcribe?api-version=2025-03-01-preview" --project src/TheRabbitHole.Web
+```
+
+Foundry serves chat on its OpenAI-compatible `/openai/v1/` endpoint, but transcription only on the deployment's own URL.
+That's why the two variables differ. You'll see how the connections handle it in Step 8.
+
+# [Workshop key](#tab/workshop)
+
+Use the key from your 1Password link. The link has these commands ready to copy, too.
+
+```bash
+dotnet user-secrets set "Umbraco:AI:Secrets:ApiKey" "<the-workshop-key>" --project src/TheRabbitHole.Web
+```
+
+```bash
+dotnet user-secrets set "Umbraco:AI:Variables:ChatEndpoint" "https://ais-umbusfest2026-eastus2.services.ai.azure.com/openai/v1/" --project src/TheRabbitHole.Web
+```
+
+```bash
+dotnet user-secrets set "Umbraco:AI:Variables:TranscriptionEndpoint" "https://ais-umbusfest2026-eastus2.services.ai.azure.com/openai/deployments/gpt-4o-transcribe?api-version=2025-03-01-preview" --project src/TheRabbitHole.Web
+```
+
+The workshop key runs on Microsoft Foundry, which serves chat and transcription on different URLs. That's why the two
+variables differ. You'll see how the connections handle it in Step 8.
+
+---
+
+> [!IMPORTANT]
+> These values **must** live under `Umbraco:AI:Secrets` or `Umbraco:AI:Variables`. For security, Umbraco AI only resolves
+> `$` references under those allowed prefixes. Any other path fails with *"Configuration key … is not permitted"*.
+
+User secrets are stored in your user profile, not in the repo. So they stay with you when you switch lesson branches, and
+they can never be committed by accident.
 
 ### Step 5: Run the site and meet the AI section
 
@@ -130,19 +191,20 @@ referenced from code, so you can rotate keys or switch environments without touc
    - **OpenAI API Key:** `$Umbraco:AI:Secrets:ApiKey` *(type exactly this, including the `$`. It's a reference to your user
      secret, not the key itself)*
    - **OpenAI Organization ID:** leave empty
-   - **OpenAI API Endpoint:** replace the default with the workshop endpoint:
+   - **OpenAI API Endpoint:** replace the default with another reference:
      ```text
-     https://ais-umbusfest2026-eastus2.services.ai.azure.com/openai/v1/
+     $Umbraco:AI:Variables:ChatEndpoint
      ```
 4. Click **Save**.
 5. Click **Test Connection**, which appears after the first save. You should see **Connection test successful**, which
-   proves Umbraco found your secret and reached the provider.
+   proves Umbraco found your secrets and reached the provider.
 
-![The Workshop connection, with the API key set to a configuration reference](../images/lesson-1/02-connection.png)
+![The Workshop connection, with the API key and the endpoint both set to configuration references](../images/lesson-1/02-connection.png)
 
 > [!NOTE]
-> That endpoint is **Microsoft Foundry**, not openai.com. Foundry serves OpenAI's API shape, so Umbraco's OpenAI provider
-> talks to it without knowing the difference.
+> Nothing in this connection says *which* provider you're using. Your `ChatEndpoint` secret decides whether it talks to
+> openai.com or to a Foundry resource. Foundry serves OpenAI's API shape, so Umbraco's OpenAI provider works with either
+> without knowing the difference.
 
 ### Step 7: Create the Podcast Profile (chat)
 
@@ -155,9 +217,10 @@ alias, `podcast-profile`, to write summaries and show notes.
 4. **Model:** **GPT 4.1**
 
    > [!IMPORTANT]
-   > The model list is long, because the endpoint lists every model Foundry offers, not just the ones we've deployed. Pick the
-   > entry named exactly **GPT 4.1**, not *GPT 4.1 Mini*, *GPT 4.1 Nano* or a dated version such as *GPT 4.1 2025 04 14*.
-   > Anything else fails later with a "deployment not found" error.
+   > The model list can be long. OpenAI lists every model your account can use, and Foundry lists every model in its
+   > catalog, not just the ones you've deployed. Pick the entry named exactly **GPT 4.1**, not *GPT 4.1 Mini*,
+   > *GPT 4.1 Nano* or a dated version such as *GPT 4.1 2025 04 14*. On Foundry, anything else fails later with a
+   > "deployment not found" error.
 
 5. Leave the **System Settings** alone for now, and click **Save**.
 
@@ -168,23 +231,27 @@ alias, `podcast-profile`, to write summaries and show notes.
 
 ### Step 8: Create the transcription connection and the Transcriber Profile
 
-Microsoft Foundry serves **chat** through the OpenAI-compatible endpoint you just used, but it serves **transcription**
-only through a URL that points straight at the transcription deployment. That URL has a catch: it can't *list* models, and
-Umbraco needs a model list to fill the profile's **Model** dropdown. So we set this one up in a specific order: create the
-connection on the regular endpoint, build the profile, then point the connection at the transcription deployment.
+On OpenAI, one endpoint does everything. Microsoft Foundry (and so the workshop key) serves **chat** through the
+OpenAI-compatible endpoint you just used, but serves **transcription** only through a URL that points straight at the
+transcription deployment. That's your `TranscriptionEndpoint` secret.
+
+That URL has a catch: it can't *list* models, and Umbraco needs a model list to fill the profile's **Model** dropdown. So
+everyone sets transcription up in the same order, whatever their provider: create the connection on the chat endpoint,
+build the profile, then switch the connection to the transcription endpoint. On OpenAI the switch changes nothing, because
+both secrets hold the same URL.
 
 > [!NOTE]
 > This is a real-world lesson in itself. Providers have quirks, and **connections** are where you absorb them. The profile,
 > and every line of code that uses it, never needs to know.
 
-**8a. Create the connection (on the regular endpoint for now)**
+**8a. Create the connection (on the chat endpoint for now)**
 
 1. **AI → Connections → Create → OpenAI**.
 2. Name it `Workshop Transcription` (alias `workshop-transcription`).
 3. **OpenAI API Key:** `$Umbraco:AI:Secrets:ApiKey`
-4. **OpenAI API Endpoint:** the same endpoint as before:
+4. **OpenAI API Endpoint:** the chat endpoint reference, as before:
    ```text
-   https://ais-umbusfest2026-eastus2.services.ai.azure.com/openai/v1/
+   $Umbraco:AI:Variables:ChatEndpoint
    ```
 5. Click **Save**.
 
@@ -193,30 +260,31 @@ connection on the regular endpoint, build the profile, then point the connection
 1. **AI → Profiles → Create**, and choose **Speech to Text**.
 2. Name it `Transcriber Profile` (alias `transcriber-profile`).
 3. **Connection:** `Workshop Transcription`
-4. **Model:** **GPT Transcribe** (exactly that entry, not *GPT 4o Transcribe* or *GPT Live Transcribe*)
+4. **Model:** **GPT 4o Transcribe** (exactly that entry, not *GPT 4o Mini Transcribe*, *GPT 4o Transcribe Diarize* or
+   *GPT Transcribe*)
 5. **Language:** `en`. It's a hint that improves accuracy; leave it empty to auto-detect.
 6. Click **Save**.
 
-![The Transcriber Profile on the Workshop Transcription connection](../images/lesson-1/04-transcriber-profile.png)
+![The Transcriber Profile on the Workshop Transcription connection, using GPT 4o Transcribe](../images/lesson-1/04-transcriber-profile.png)
 
-**8c. Point the connection at the transcription deployment**
+**8c. Switch the connection to the transcription endpoint**
 
 1. Open **AI → Connections → Workshop Transcription**.
 2. Replace the **OpenAI API Endpoint** with:
    ```text
-   https://ais-umbusfest2026-eastus2.services.ai.azure.com/openai/deployments/gpt-transcribe?api-version=2025-03-01-preview
+   $Umbraco:AI:Variables:TranscriptionEndpoint
    ```
 3. Click **Save**.
 
-![The Workshop Transcription connection pointing at the gpt-transcribe deployment](../images/lesson-1/04b-transcription-connection.png)
+![The Workshop Transcription connection with its endpoint set to the TranscriptionEndpoint reference](../images/lesson-1/04b-transcription-connection.png)
 
 > [!WARNING]
-> **Test Connection now reports a failure on Workshop Transcription. That's expected.** The test works by listing models,
-> which this URL can't do. Transcription itself works, and you'll prove it in Lesson 2. The **Workshop** connection's test
-> should still succeed.
+> **On Foundry or the workshop key, Test Connection now fails on Workshop Transcription. That's expected.** The test
+> works by listing models, which the deployment URL can't do. Transcription itself works, and you'll prove it in Lesson 2.
+> The **Workshop** connection's test should still succeed. (On OpenAI, both tests succeed.)
 >
-> Also, don't change the Transcriber Profile's connection after this step. The model list would come back empty and the
-> profile wouldn't save. If you ever need to, point the connection back at the regular endpoint first.
+> Also, don't change the Transcriber Profile's connection after this step. On Foundry, the model list would come back
+> empty and the profile wouldn't save. If you ever need to, switch the connection back to `ChatEndpoint` first.
 
 You now have two connections:
 
@@ -287,7 +355,8 @@ In Lesson 2 our transcription code won't name a profile. It'll use whatever the 
 ## ✅ Checkpoint
 
 - ⬜ **Connections** lists **Workshop** and **Workshop Transcription**. Both API keys show `$Umbraco:AI:Secrets:ApiKey` (not
-  the real key), and **Test Connection** succeeds on **Workshop**.
+  the real key), the endpoints show `$Umbraco:AI:Variables:ChatEndpoint` and `$Umbraco:AI:Variables:TranscriptionEndpoint`,
+  and **Test Connection** succeeds on **Workshop**.
 - ⬜ **Profiles** lists **Podcast Profile** (`podcast-profile`, Chat, Workshop connection) and **Transcriber Profile**
   (`transcriber-profile`, Speech to Text, Workshop Transcription connection).
 - ⬜ **Contexts** lists **Brand Voice**, and it's attached to the Podcast Profile.
@@ -295,10 +364,14 @@ In Lesson 2 our transcription code won't name a profile. It'll use whatever the 
 
 ## 🔍 Under the hood
 
-Notice what *isn't* anywhere in the backoffice: your API key. The connection stores the reference
-`$Umbraco:AI:Secrets:ApiKey`, and Umbraco AI resolves it from configuration every time it builds a client. That's why the
-database snapshot in each lesson branch can be shared safely, and why you could point production at Azure Key Vault
-without changing any settings.
+Notice what *isn't* anywhere in the backoffice: your API key, or even which provider you use. The connections store
+references, and Umbraco AI resolves them from configuration every time it builds a client. That's why the database
+snapshot in each lesson branch can be shared safely and works for every attendee's provider, and why you could point
+production at Azure Key Vault without changing any settings.
+
+The two prefixes do different jobs. `Umbraco:AI:Secrets` is for sensitive values, and Umbraco AI only lets you use it in
+sensitive fields such as the API key. `Umbraco:AI:Variables` is for ordinary values that change between environments,
+like our endpoints, and works in any field.
 
 Notice too how the layers stack up. Our code will say "use `podcast-profile`". The profile decides the connection, model
 and contexts. The connection decides the credentials. Swap any layer in the backoffice, and the code doesn't change.
@@ -308,12 +381,14 @@ and contexts. The connection decides the credentials. Swap any layer in the back
 <details>
 <summary><strong>"Configuration key '…' is not permitted in settings"</strong></summary>
 
-The `$` reference points outside the allowed prefixes. Use exactly `$Umbraco:AI:Secrets:ApiKey`, and make sure the user
-secret was saved under `Umbraco:AI:Secrets:ApiKey`:
+A `$` reference points outside the allowed prefixes. Use exactly the references shown in Steps 6 and 8, and make sure
+your user secrets were saved under the same names:
 
 ```bash
 dotnet user-secrets list --project src/TheRabbitHole.Web
 ```
+
+This prints your key, so don't run it on a shared screen.
 
 </details>
 
@@ -322,24 +397,45 @@ dotnet user-secrets list --project src/TheRabbitHole.Web
 
 The connection couldn't list models. Check that:
 
-- the user secret is set (`dotnet user-secrets list --project src/TheRabbitHole.Web` shows `Umbraco:AI:Secrets:ApiKey`)
-- you **restarted** the site after setting it. User secrets are read at startup.
-- the **OpenAI API Endpoint** is exactly as shown, including the trailing `/openai/v1/`
+- all three user secrets are set: `dotnet user-secrets list --project src/TheRabbitHole.Web` shows
+  `Umbraco:AI:Secrets:ApiKey`, `Umbraco:AI:Variables:ChatEndpoint` and `Umbraco:AI:Variables:TranscriptionEndpoint`
+- you **restarted** the site after setting them. User secrets are read at startup.
+- your `ChatEndpoint` ends in `/v1/` (`https://api.openai.com/v1/` or `https://<resource>.services.ai.azure.com/openai/v1/`)
+- the key belongs to that provider. An OpenAI key won't work against a Foundry endpoint, or the other way round.
+
+</details>
+
+<details>
+<summary><strong>OpenAI says "You exceeded your current quota"</strong></summary>
+
+Your OpenAI account has no credit. API usage is billed separately from ChatGPT. Add credit under **Settings → Billing**
+on [platform.openai.com](https://platform.openai.com), wait a minute, and try again. See
+[Bring your AI key](../ai-key.md).
+
+</details>
+
+<details>
+<summary><strong>Foundry says "deployment not found" (DeploymentNotFound)</strong></summary>
+
+Foundry looks for a deployment with the same name as the model. Check your deployments are named exactly `gpt-4.1` and
+`gpt-4o-transcribe`, that the Podcast Profile uses **GPT 4.1** (not a dated or Mini version), and that your
+`TranscriptionEndpoint` contains `/deployments/gpt-4o-transcribe`. A brand-new deployment can take a minute or two to
+start answering.
 
 </details>
 
 <details>
 <summary><strong>Test Connection fails on Workshop Transcription</strong></summary>
 
-Expected after Step 8c. See the warning in that step. Only worry if **Workshop** fails too.
+Expected after Step 8c on Foundry or the workshop key. See the warning in that step. Only worry if **Workshop** fails too.
 
 </details>
 
 <details>
 <summary><strong>The Transcriber Profile's Model dropdown is empty and disabled</strong></summary>
 
-Its connection is already pointing at the transcription deployment, which can't list models. Temporarily set **Workshop
-Transcription**'s endpoint back to the regular `/openai/v1/` endpoint, fix the profile, then redo Step 8c.
+Its connection is already using the transcription endpoint, which can't list models on Foundry. Temporarily set
+**Workshop Transcription**'s endpoint back to `$Umbraco:AI:Variables:ChatEndpoint`, fix the profile, then redo Step 8c.
 
 </details>
 
@@ -382,7 +478,8 @@ dotnet run --project src/TheRabbitHole.Web
 ```
 
 The branch includes the packages *and* the backoffice configuration for this lesson (it's in the site's database). You
-still need Step 4, because your API key lives in user secrets, not in the repo.
+still need Step 4, because your key and endpoints live in user secrets, not in the repo. Once they're set, the branch
+works whichever provider you use.
 
 ## 🚀 Stretch goals
 
