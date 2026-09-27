@@ -1,6 +1,6 @@
 # Lesson 1: Install & configure Umbraco AI
 
-> ⏱️ **Timebox: ~20 minutes** · Starting branch: `init` · Finished branch: `lesson-1-end`
+> ⏱️ **Timebox: ~17 minutes** · Starting branch: `init` · Finished branch: `lesson-1-end`
 
 > [!TRACKER]
 > ⬜ Transcribe podcast audio · ⬜ Generate a summary and show notes · ⬜ Cross-link mentioned episodes · ⬜ Validate guest details
@@ -20,7 +20,7 @@ No C# yet (apart from one line in a project file). This lesson is all about the 
 
 - `src/TheRabbitHole.Web/TheRabbitHole.Web.csproj`: add the `Umbraco.AI` and `Umbraco.AI.OpenAI` packages
 - `src/TheRabbitHole.Core/TheRabbitHole.Core.csproj`: add `Umbraco.AI.Core` and suppress `MEAI001`
-- **User secrets:** store your API key and two endpoints (outside the repo)
+- **User secrets:** check the API key and two endpoints you saved in Lesson 0
 - **Backoffice → AI:** two connections, two profiles, one context, and one setting
 
 ## Steps
@@ -56,7 +56,7 @@ dotnet add src/TheRabbitHole.Core package Umbraco.AI.Core --version 17.3.5
 > [key paths](../ai-key.md): OpenAI, your own Foundry, and the workshop key (which runs on Foundry).
 
 > [!TIP]
-> Did Lesson 0? These packages come straight from your local NuGet cache, so this is instant.
+> You restored `main` in Lesson 0, so these packages come straight from your local NuGet cache. This is instant.
 
 ### Step 3: Suppress the experimental speech-to-text warning
 
@@ -77,77 +77,29 @@ Open **`src/TheRabbitHole.Core/TheRabbitHole.Core.csproj`** and add the `NoWarn`
     </PropertyGroup>
 ```
 
-### Step 4: Store your key and endpoints as user secrets
+### Step 4: Check your key and endpoints
+
+In [Lesson 0, Step 8](lesson-0.md#8-save-your-key-and-endpoints-as-user-secrets) you saved three user secrets. Here's
+why they're set up the way they are.
 
 API keys never go in the repo or the database. Umbraco AI connection settings can instead **reference configuration**
 with a `$` prefix, for example `$Umbraco:AI:Secrets:ApiKey`, and resolve the real value at runtime from appsettings,
 environment variables, a key vault, or (for local development) **.NET user secrets**.
 
-We'll use references for three values. The **API key** goes under `Umbraco:AI:Secrets`, because it's sensitive. The two
+We use references for three values. The **API key** goes under `Umbraco:AI:Secrets`, because it's sensitive. The two
 **endpoints** go under `Umbraco:AI:Variables`. They aren't secret, but they differ from person to person: yours point at
 OpenAI or at a Foundry resource. Keeping them in configuration means the same backoffice setup works for everyone, and
 it's why every lesson branch's database snapshot works on your machine, whichever provider you use.
 
-> [!TIP]
-> Already saved them from the [Bring your AI key](../ai-key.md) page? Then skip to Step 5.
-
-Pick your path and run the three commands from the repo root. Replace the key placeholder with your own key.
-
-# [OpenAI](#tab/openai)
+Check all three are there. This prints your key, so don't run it on a shared screen:
 
 ```bash
-dotnet user-secrets set "Umbraco:AI:Secrets:ApiKey" "<your-openai-key>" --project src/TheRabbitHole.Web
+dotnet user-secrets list --project src/TheRabbitHole.Web
 ```
 
-```bash
-dotnet user-secrets set "Umbraco:AI:Variables:ChatEndpoint" "https://api.openai.com/v1/" --project src/TheRabbitHole.Web
-```
-
-```bash
-dotnet user-secrets set "Umbraco:AI:Variables:TranscriptionEndpoint" "https://api.openai.com/v1/" --project src/TheRabbitHole.Web
-```
-
-On OpenAI, one endpoint serves both chat and transcription, so both variables get the same value.
-
-# [Microsoft Foundry](#tab/foundry)
-
-Replace `<your-resource>` with your Foundry resource name.
-
-```bash
-dotnet user-secrets set "Umbraco:AI:Secrets:ApiKey" "<your-foundry-key>" --project src/TheRabbitHole.Web
-```
-
-```bash
-dotnet user-secrets set "Umbraco:AI:Variables:ChatEndpoint" "https://<your-resource>.services.ai.azure.com/openai/v1/" --project src/TheRabbitHole.Web
-```
-
-```bash
-dotnet user-secrets set "Umbraco:AI:Variables:TranscriptionEndpoint" "https://<your-resource>.services.ai.azure.com/openai/deployments/gpt-4o-transcribe?api-version=2025-03-01-preview" --project src/TheRabbitHole.Web
-```
-
-Foundry serves chat on its OpenAI-compatible `/openai/v1/` endpoint, but transcription only on the deployment's own URL.
-That's why the two variables differ. You'll see how the connections handle it in Step 8.
-
-# [Workshop key](#tab/workshop)
-
-Use the key from your 1Password link. The link has these commands ready to copy, too.
-
-```bash
-dotnet user-secrets set "Umbraco:AI:Secrets:ApiKey" "<the-workshop-key>" --project src/TheRabbitHole.Web
-```
-
-```bash
-dotnet user-secrets set "Umbraco:AI:Variables:ChatEndpoint" "https://ais-umbusfest2026-eastus2.services.ai.azure.com/openai/v1/" --project src/TheRabbitHole.Web
-```
-
-```bash
-dotnet user-secrets set "Umbraco:AI:Variables:TranscriptionEndpoint" "https://ais-umbusfest2026-eastus2.services.ai.azure.com/openai/deployments/gpt-4o-transcribe?api-version=2025-03-01-preview" --project src/TheRabbitHole.Web
-```
-
-The workshop key runs on Microsoft Foundry, which serves chat and transcription on different URLs. That's why the two
-variables differ. You'll see how the connections handle it in Step 8.
-
----
+You should see `Umbraco:AI:Secrets:ApiKey`, `Umbraco:AI:Variables:ChatEndpoint` and
+`Umbraco:AI:Variables:TranscriptionEndpoint`. Missing one? Go back to
+[Lesson 0, Step 8](lesson-0.md#8-save-your-key-and-endpoints-as-user-secrets) and pick your path.
 
 > [!IMPORTANT]
 > These values **must** live under `Umbraco:AI:Secrets` or `Umbraco:AI:Variables`. For security, Umbraco AI only resolves
@@ -478,7 +430,7 @@ dotnet run --project src/TheRabbitHole.Web
 ```
 
 The branch includes the packages *and* the backoffice configuration for this lesson (it's in the site's database). You
-still need Step 4, because your key and endpoints live in user secrets, not in the repo. Once they're set, the branch
+still need your user secrets from [Lesson 0, Step 8](lesson-0.md#8-save-your-key-and-endpoints-as-user-secrets), because your key and endpoints live outside the repo. Once they're set, the branch
 works whichever provider you use.
 
 ## 🚀 Stretch goals

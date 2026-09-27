@@ -2,10 +2,10 @@
 # follow this list from top to bottom (groups without an href are skipped).
 - name: Home
   href: index.md
-- name: Before you start
+- name: Get set up
   expanded: true
   items:
-  - name: "Lesson 0: Before the workshop"
+  - name: "Lesson 0: Setup"
     href: lessons/lesson-0.md
   - name: Bring your AI key
     href: ai-key.md

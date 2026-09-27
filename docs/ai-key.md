@@ -20,7 +20,12 @@ rate limit on conference Wi-Fi. There are three ways to take part:
 | **Workshop key** (backup) | You can't use either of the above | Nothing. We'll send you a key through 1Password. |
 
 Whichever path you pick, you end up with **three values**: an **API key**, a **chat endpoint** and a **transcription
-endpoint**. In Lesson 1 you'll store them as .NET user secrets, and every lesson branch picks them up from there.
+endpoint**. In [Lesson 0, Step 8](lessons/lesson-0.md#8-save-your-key-and-endpoints-as-user-secrets) you store them as
+.NET user secrets, and every lesson branch picks them up from there.
+
+> [!NOTE]
+> Setting up your own account in the room works, but adding billing or deploying models can take a while. If you're in a
+> hurry, ask Alex for the workshop key and set up your own account later.
 
 > [!TIP]
 > **What will it cost?** Very little. Transcribing the four-minute episode costs a few cents each time, and a summary, the
@@ -104,8 +109,8 @@ Using a classic **Azure OpenAI** resource instead of a Foundry resource? That wo
 
 # [Workshop key](#tab/workshop)
 
-If you can't bring your own key, reply to the pre-workshop email (or tell Alex at the start of the workshop). You'll get a
-**1Password link by email** with the workshop key and all three values.
+If you don't have your own key, ask Alex. You'll get a **1Password link by email** with the workshop key and all three
+values.
 
 The workshop key runs on Marcel Digital's Microsoft Foundry resource, so it's shared by everyone using it. It stops working
 after the festival. Please don't commit it or paste it anywhere public.
@@ -120,26 +125,11 @@ Your three values:
 
 ---
 
-## Save your values as user secrets (optional, before the day)
+## Next: save them as user secrets
 
-If you've finished [Lesson 0](lessons/lesson-0.md), you can store your values now and skip that part of Lesson 1. Run these
-from the repository root, replacing the placeholders with your three values:
-
-```bash
-dotnet user-secrets set "Umbraco:AI:Secrets:ApiKey" "<your-api-key>" --project src/TheRabbitHole.Web
-```
-
-```bash
-dotnet user-secrets set "Umbraco:AI:Variables:ChatEndpoint" "<your-chat-endpoint>" --project src/TheRabbitHole.Web
-```
-
-```bash
-dotnet user-secrets set "Umbraco:AI:Variables:TranscriptionEndpoint" "<your-transcription-endpoint>" --project src/TheRabbitHole.Web
-```
-
-User secrets live in your user profile, not in the repository, so they can't be committed by accident, and they stay put
-when you switch branches. [Lesson 1, Step 4](lessons/lesson-1.md#step-4-store-your-key-and-endpoints-as-user-secrets)
-explains how Umbraco AI reads them.
+Head to [Lesson 0, Step 8](lessons/lesson-0.md#8-save-your-key-and-endpoints-as-user-secrets) and pick the tab for your
+path. User secrets live in your user profile, not in the repository, so they can't be committed by accident, and they stay
+put when you switch branches.
 
 > [!WARNING]
 > Treat the key like a password. Don't paste it into chat, a screenshot or a commit. When the workshop's over, revoke it

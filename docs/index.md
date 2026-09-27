@@ -23,15 +23,16 @@ hand-written calls with an agent, and finally let **Umbraco Automate** run the w
 | Time | Segment | Min |
 |---|---|---|
 | **Part 1** | | |
-| 12:55 | Settle in: open the `init` branch and your AI key | 5 |
-| 1:00 | Lecture 1: Welcome & the landscape *(boot the `init` branch while we talk)* | 12 |
-| 1:12 | Lecture 2: Umbraco AI building blocks | 8 |
-| 1:20 | [**Lesson 1:** Install & configure Umbraco AI](lessons/lesson-1.md) | 20 |
-| 1:40 | Lecture 3: The pipeline & the core services | 8 |
-| 1:48 | [**Lesson 2:** Transcribe, summarise, write show notes](lessons/lesson-2.md) | 27 |
-| 2:15 | Lecture 4: Contexts & custom resource types | 8 |
-| 2:23 | [**Lesson 3:** Show Metadata context](lessons/lesson-3.md) | 25 |
-| 2:48 | Buffer / Q&A | 12 |
+| 12:55 | [**Lesson 0:** Setup](lessons/lesson-0.md): clone, download, run *(start as you sit down)* | 5 |
+| 1:00 | Lecture 1: Welcome & the landscape *(your downloads keep going while we talk)* | 12 |
+| 1:12 | Setup checkpoint: site running, logged in, AI key saved | 10 |
+| 1:22 | Lecture 2: Umbraco AI building blocks | 8 |
+| 1:30 | [**Lesson 1:** Install & configure Umbraco AI](lessons/lesson-1.md) | 17 |
+| 1:47 | Lecture 3: The pipeline & the core services | 8 |
+| 1:55 | [**Lesson 2:** Transcribe, summarise, write show notes](lessons/lesson-2.md) | 27 |
+| 2:22 | Lecture 4: Contexts & custom resource types | 8 |
+| 2:30 | [**Lesson 3:** Show Metadata context](lessons/lesson-3.md) | 25 |
+| 2:55 | Buffer / Q&A | 5 |
 | 3:00 | *Break. If you're behind, catch up with `git checkout lesson-3-end`* | 20 |
 | **Part 2** | | |
 | 3:20 | Lecture 5: Tools | 6 |
@@ -71,7 +72,7 @@ Fell behind, or something broke? Checking out a lesson's end branch catches you 
 
 ## Start here
 
-Before the day, set up your machine and warm your NuGet cache, so conference Wi-Fi can't slow you down. Then
-[bring your AI key](ai-key.md): your own OpenAI or Microsoft Foundry key, or our backup workshop key.
+Sit down, open a terminal, and start setting up. The downloads run while the first lecture is on. If you don't have an AI
+key yet, [Bring your AI key](ai-key.md) explains your options, or just ask Alex for the workshop key.
 
-<p><a class="btn btn-primary btn-lg" href="lessons/lesson-0.md">Start with Lesson 0: Before the workshop →</a></p>
+<p><a class="btn btn-primary btn-lg" href="lessons/lesson-0.md">Start with Lesson 0: Setup →</a></p>
