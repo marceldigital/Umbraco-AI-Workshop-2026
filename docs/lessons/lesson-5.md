@@ -689,8 +689,8 @@ What's happening:
 
 ### Step 6: Run the agent from `PodcastEpisodeTranscriber`
 
-Open **`src/TheRabbitHole.Core/PodcastEpisodeTranscriber.cs`**. At the top, add the agent namespace to the usings, directly below
-`using Microsoft.Extensions.Logging;`:
+Open **`src/TheRabbitHole.Core/PodcastEpisodeTranscriber.cs`**. At the top, add one line to the usings,
+`using Umbraco.AI.Agent.Core.Agents;`, directly below `using Microsoft.Extensions.Logging;`, so that part reads:
 
 ```csharp
 using Microsoft.Extensions.Logging;

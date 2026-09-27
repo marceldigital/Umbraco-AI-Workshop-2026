@@ -95,7 +95,7 @@ so each episode is processed with a clean slate, as if it were its own little re
 
 ### Step 2: Add the AI usings
 
-At the top of **`PodcastEpisodeTranscriber.cs`**, update the `using` block so it looks like this. Three lines are new:
+At the top of **`PodcastEpisodeTranscriber.cs`**, replace the whole `using` block with this one. Three lines are new:
 `Microsoft.Extensions.AI`, `Umbraco.AI.Core.Chat` and `Umbraco.AI.Core.SpeechToText`.
 
 **`src/TheRabbitHole.Core/PodcastEpisodeTranscriber.cs`**
