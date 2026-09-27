@@ -1,0 +1,96 @@
+﻿@using TheRabbitHole.Core.Models
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<TheRabbitHole.Core.Models.PodcastEpisode>
+@{
+  Layout = "_Layout.cshtml";
+
+  var container = Model.Ancestor<PodcastEpisodes>();
+  var defaultImage = container?.DefaultImage?.Url() ?? "/main-image.png";
+  
+  @*
+    Model properties (map to your Umbraco Episode content type):
+      Model.Title        – episode title
+      Model.Number       – episode number
+      Model.Date         – formatted publish date
+      Model.Duration     – e.g. "1:00:42"
+      Model.AudioUrl     – MP3 URL
+      Model.ArtworkUrl   – episode artwork (falls back to show artwork)
+      Model.Summary      – short summary paragraph
+      Model.Notes        – IEnumerable<EpisodeNoteSection>
+                           (modelled as a Block List in Umbraco)
+      Model.Contributors – e.g. "Dave Kellett and Brad Guigar"
+  *@
+}
+
+<div class="page">
+
+  <a href="/episodes" class="back-btn">
+    <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14" aria-hidden="true"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    Back to Episodes
+  </a>
+  
+  <div class="detail-header">
+    <img class="detail-thumb"
+         src="@(Model.Image != null ? Model.Image.Url() : defaultImage)"
+         alt="@Model.Name artwork"
+         width="80" height="80" />
+    <div>
+      <h1 class="detail-title">@Model.Name</h1>
+      <p class="detail-meta">@Model.PublishDate?.ToString("dd MMM yyyy") &nbsp;·&nbsp; @Model.Duration Mins &nbsp;·&nbsp; #@(Model.EpisodeNumber)</p>
+    </div>
+  </div>
+
+  <div class="detail-actions">
+    <button class="action-btn" aria-label="Play @Model.Name">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+      Play
+    </button>
+    <button class="action-btn"
+            onclick="navigator.clipboard?.writeText(window.location.href)"
+            aria-label="Copy link">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14" aria-hidden="true"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/></svg>
+      Share
+    </button>
+    <a class="action-btn" href="@Model.AudioFile" download aria-label="Download MP3">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14" aria-hidden="true"><path d="M5 20h14v-2H5v2zm7-18L5.33 9h4.84V13h3.66V9h4.84L12 2z"/></svg>
+      Download MP3
+    </a>
+  </div>
+
+  <section class="detail-section">
+    <p class="section-label">Episode Summary</p>
+    <p>@Model.Summary</p>
+  </section>
+
+  @if (Model.ShowNotes != null)
+  {
+    <section class="detail-section prose">
+      <p class="section-label">Episode Notes</p>
+      @Model.ShowNotes
+    </section>
+  }
+  
+  @if (!string.IsNullOrWhiteSpace(Model.Transcript))
+  {
+    <section class="detail-section">
+      <p class="section-label">Episode Transcript</p>
+      @Html.ReplaceLineBreaks(Model.Transcript)
+    </section>
+  }
+
+  <div class="cta-card">
+    <h3>Join the community</h3>
+    <p>Support the show and get early access, exclusive content, and more.</p>
+    <a class="btn btn-primary" href="https://patreon.com" target="_blank" rel="noopener">
+      Support on Patreon
+    </a>
+  </div>
+
+  @* @if (!string.IsNullOrEmpty(Model.Contributors)) *@
+  @* { *@
+  @*   <p class="ep-meta" style="margin-top:32px"> *@
+  @*     <strong>Contributors</strong> &nbsp; @Model.Contributors *@
+  @*   </p> *@
+  @* } *@
+
+</div>
+

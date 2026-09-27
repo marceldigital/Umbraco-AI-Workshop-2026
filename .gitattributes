@@ -1,0 +1,8 @@
+* text=auto
+
+*.sqlite.db binary
+*.mp3 binary
+*.png binary
+*.jpg binary
+*.woff binary
+*.woff2 binary

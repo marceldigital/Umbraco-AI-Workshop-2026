@@ -1,0 +1,77 @@
+## Visual Studio / Rider / VS Code
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.sln.iml
+*.DotSettings.user
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
+bld/
+[Pp]ublish/
+*.pidb
+*.svclog
+*.scc
+*.cache
+
+## .NET build output
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.pdb
+*.dll.config
+*.binlog
+*.nupkg
+*.snupkg
+
+## Test / coverage
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.VisualState.xml
+TestResult.xml
+coverage*.json
+coverage*.xml
+coverage*.info
+
+## Tooling caches
+.nuget/
+*.nuget.props
+*.nuget.targets
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+## Claude / agents
+.claude/
+
+## Umbraco runtime
+# The seeded SQLite DBs and uploaded media files ARE committed so the demo runs
+# out of the box. Logs and TEMP are runtime-only and stay ignored.
+src/TheRabbitHole.Web/umbraco/Data/*.sqlite.db-*
+src/TheRabbitHole.Web/umbraco/Data/TEMP/
+src/TheRabbitHole.Web/umbraco/Logs/
+src/TheRabbitHole.Web/umbraco/mediafilesystem/
+
+## Secrets / machine-specific configuration
+# appsettings.{Environment.MachineName}.json is loaded by Program.cs — store provider keys here
+src/TheRabbitHole.Web/appsettings.*.json
+!src/TheRabbitHole.Web/appsettings.json
+!src/TheRabbitHole.Web/appsettings.Development.json
+!src/TheRabbitHole.Web/appsettings-schema.json
+!src/TheRabbitHole.Web/appsettings-schema.Umbraco.Cms.json
+
+## ModelsBuilder out-of-date marker
+**/Models/PublishedModels/ood.flag
+
+## OS detritus
+.DS_Store
+Thumbs.db

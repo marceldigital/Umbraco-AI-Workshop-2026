@@ -1,0 +1,64 @@
+﻿@using TheRabbitHole.Core.Extensions
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<TheRabbitHole.Core.Models.IPageComp>
+@{
+	Layout = null;
+    
+    var metaTitle = Model.PageTitle;
+    if (metaTitle.IsNullOrWhiteSpace())
+    {
+        var page = (IPublishedContent)Model;
+        var homePage = page.GetHomePage();
+
+        metaTitle = page.Id == homePage.Id 
+            ? $"{homePage.SiteName} - {homePage.SiteDescription}" 
+            : $"{page.Name} | {homePage.SiteName}";
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@metaTitle</title>
+    <meta name="description" content="@Model.MetaDescription" />
+    <meta name="keywords" content="@Model.MetaKeywords" />
+    <style>
+        @@font-face {
+            font-family: 'Bear Days';
+            src: url('/fonts/bear-days/BearDays.woff2') format('woff2'),
+            url('/fonts/bear-days/BearDays.woff') format('woff'),
+            url('/fonts/bear-days/BearDays.svg#BearDays') format('svg');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+    </style>
+    <link rel="stylesheet" href="/css/trh.css" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+	<script defer src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.14.1/cdn.min.js"></script>
+    @await RenderSectionAsync("Head", required: false)
+</head>
+<body x-data="themeApp()" :data-theme="theme">
+
+@await Html.PartialAsync("_PlayerBar")
+@await Html.PartialAsync("_Nav")
+
+<main>
+	@RenderBody()
+</main>
+
+@await RenderSectionAsync("Scripts", required: false)
+
+<script>
+    function themeApp() {
+      return {
+        theme: localStorage.getItem('podcast-theme') || 'light',
+        toggleTheme() {
+          this.theme = this.theme === 'dark' ? 'light' : 'dark';
+          localStorage.setItem('podcast-theme', this.theme);
+        }
+      };
+    }
+  </script>
+</body>
+</html>

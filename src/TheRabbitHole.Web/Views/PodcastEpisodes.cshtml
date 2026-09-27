@@ -1,0 +1,26 @@
+﻿@using TheRabbitHole.Core.Models
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<TheRabbitHole.Core.Models.PodcastEpisodes>
+@{
+	Layout = "_Layout.cshtml";
+
+	@*
+    Model properties:
+      Model.Episodes – IEnumerable<EpisodeViewModel>, ordered newest first
+                       (query from Umbraco: Model.Children.OfType<Episode>().OrderByDescending(e => e.PublishDate))
+  *@
+}
+
+<div class="page">
+	<div class="page-title-items">
+		<p class="page-title">Episodes</p>
+		<div>
+			<input type="text" placeholder="Search..." style="padding: 10px; font-size: 14px; width:  300px; border:  solid 1px var(--border); background-color: var(--bg);">
+		</div>
+	</div>
+	<div class="episode-list">
+		@foreach (var ep in Model.Children<PodcastEpisode>().OrderByDescending(x => x.CreateDate))
+		{
+			@await Html.PartialAsync("_EpisodeCard", ep)
+		}
+	</div>
+</div>

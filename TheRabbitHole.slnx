@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src\TheRabbitHole.Web\TheRabbitHole.Web.csproj" Type="Classic C#" />
+  <Project Path="src\TheRabbitHole.Core\TheRabbitHole.Core.csproj" Type="Classic C#" />
+</Solution>

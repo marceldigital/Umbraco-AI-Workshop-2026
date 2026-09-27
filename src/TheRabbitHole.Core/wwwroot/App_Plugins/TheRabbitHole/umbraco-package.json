@@ -1,0 +1,22 @@
+{
+  "name": "TheRabbitHole",
+  "version": "1.0.0",
+  "extensions": [
+    {
+      "type": "backofficeEntryPoint",
+      "alias": "TheRabbitHole.EntryPoint",
+      "name": "The Rabbit Hole Entry Point",
+      "js": "/App_Plugins/TheRabbitHole/podcast-notifications.js"
+    },
+    {
+      "type": "localization",
+      "alias": "TheRabbitHole.Localization.En",
+      "name": "English",
+      "weight": -100,
+      "meta": {
+        "culture": "en"
+      },
+      "js": "/App_Plugins/TheRabbitHole/lang/en.js"
+    }
+  ]
+}

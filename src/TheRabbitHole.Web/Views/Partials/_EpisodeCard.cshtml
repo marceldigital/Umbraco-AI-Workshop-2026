@@ -1,0 +1,23 @@
+﻿@using TheRabbitHole.Core.Models
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<TheRabbitHole.Core.Models.PodcastEpisode>
+@{
+    var container = Model.Ancestor<PodcastEpisodes>();
+    var defaultImage = container?.DefaultImage?.Url() ?? "/main-image.png";
+}
+
+<article class="episode-item"
+    onclick="window.location='@Model.Url()'">
+
+    <img class="ep-thumb"
+         src="@(Model.Image != null ? Model.Image.Url() : defaultImage)"
+         alt="@Model.Name artwork"
+         width="56" height="56" />
+
+    <div class="ep-body">
+        <a class="ep-title" href="@Model.Url()">@Model.Name</a>
+        <p class="ep-desc">@Model.Summary</p>
+        <p class="ep-meta">@Model.PublishDate?.ToString("dd MMM yyyy") &nbsp;·&nbsp; @Model.Duration Mins &nbsp;·&nbsp; #@(Model.EpisodeNumber)</p>
+    </div>
+
+</article>
+
