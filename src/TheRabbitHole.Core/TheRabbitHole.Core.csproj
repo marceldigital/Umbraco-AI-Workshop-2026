@@ -11,6 +11,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Umbraco.AI.Agent.Core" Version="17.1.7" />
         <PackageReference Include="Umbraco.AI.Core" Version="17.3.5" />
         <PackageReference Include="Umbraco.Cms.Core" Version="17.7.0" />
         <PackageReference Include="Umbraco.Cms.Infrastructure" Version="17.7.0" />

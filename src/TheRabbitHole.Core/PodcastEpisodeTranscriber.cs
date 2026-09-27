@@ -4,6 +4,7 @@ using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Umbraco.AI.Agent.Core.Agents;
 using Umbraco.AI.Core.Chat;
 using Umbraco.AI.Core.SpeechToText;
 using Umbraco.Cms.Core.IO;
@@ -57,7 +58,9 @@ public class PodcastEpisodeTranscriber(PodcastEpisodeQueue queue, IServiceScopeF
     // The main processing logic: transcribe the audio, generate show notes, save to Umbraco, and notify clients via SignalR.
     private async Task ProcessAsync(Guid contentKey, CancellationToken ct)
     {
-        await ProcessManualAsync(contentKey, ct);
+        // Lesson 5: hand the whole job to the agent instead of our hand-rolled steps.
+        // await ProcessManualAsync(contentKey, ct);
+        await ProcessAgentAsync(contentKey, ct);
     }
 
     private async Task ProcessManualAsync(Guid contentKey, CancellationToken ct)
@@ -171,6 +174,27 @@ public class PodcastEpisodeTranscriber(PodcastEpisodeQueue queue, IServiceScopeF
             // so they can update the UI in real time if needed.
             await hub.Clients.All.SendAsync("episodeProcessed", contentKey, content.Name, ct);
         }
+    }
+
+    // Agent-driven processing: hands the episode to the `podcast-producer` agent, which orchestrates
+    // transcription, guest resolution, summary, and show notes via the tools registered under the "podcast" scope.
+    // The strategy difference vs. ProcessManualAsync: no step ordering in C#, no per-task prompts. The agent reads the
+    // episode state, decides which artifacts are missing, and composes tool calls until the job is done.
+    private async Task ProcessAgentAsync(Guid contentKey, CancellationToken ct)
+    {
+        using var scope = scopeFactory.CreateScope();
+        var agentService = scope.ServiceProvider.GetRequiredService<IAIAgentService>();
+
+        logger.LogInformation("Running podcast-producer agent for episode {Id}", contentKey);
+
+        await agentService.RunAgentAsync(
+            "podcast-producer",
+            [new ChatMessage(ChatRole.User, $"Produce episode {contentKey}.")],
+            cancellationToken: ct);
+
+        // The agent fires the SignalR notification itself via the publish_episode_report tool —
+        // nothing to do here after the run completes.
+        logger.LogInformation("podcast-producer agent finished for episode {Id}", contentKey);
     }
 
     // The Tiptap rich-text editor persists even a manually cleared field as a JSON envelope
