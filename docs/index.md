@@ -5,7 +5,7 @@ description: Step-by-step lessons for the "Beyond the Chatbot - Building Extensi
 
 # Beyond the Chatbot: Building Extensible AI Workflows in Umbraco
 
-A hands-on workshop at **Umbraco US Festival 2026**, Wednesday, September 30.
+A hands-on workshop at **Umbraco US Festival 2026**, Wednesday, September 30, in **Enclave (2nd Floor)**.
 Part 1 runs 12:55–3:00, then a break, then Part 2 runs 3:20–4:40.
 
 ## The premise
