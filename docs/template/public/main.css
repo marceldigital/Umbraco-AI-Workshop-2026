@@ -1,0 +1,78 @@
+/* Light-touch overrides for the DocFX "modern" template. Keep this file small. */
+
+:root {
+  --workshop-accent: #3544b1; /* Umbraco-ish blue */
+}
+
+/* Navbar logo: the Rabbit Hole wordmark is black, so invert it in dark mode. */
+#logo {
+  height: 36px;
+  width: auto;
+  margin-right: .75rem;
+}
+
+[data-bs-theme="dark"] #logo {
+  filter: invert(1);
+}
+
+/* With a single root toc.yml the template renders it in the navbar. docfx.json forces the sidebar TOC on
+   (_disableToc: false), so hide the duplicate navbar links. Search, the GitHub icon and the theme switcher stay. */
+#navbar > ul.navbar-nav {
+  display: none;
+}
+
+/* Requirements tracker callout: `> [!TRACKER]` (see docfx.json markdownEngineProperties.alerts). */
+.alert-tracker {
+  --bs-alert-color: var(--bs-body-color);
+  --bs-alert-bg: var(--bs-tertiary-bg);
+  --bs-alert-border-color: var(--bs-border-color);
+  border-left: .3rem solid var(--workshop-accent);
+  padding: .75rem 1rem;
+  font-size: .9rem;
+}
+
+.alert-tracker > h5 {
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  margin-bottom: .4rem;
+}
+
+.alert-tracker ul {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+.alert-tracker p:last-child {
+  margin-bottom: 0;
+}
+
+/* Keep branch names like `lesson-N-end` on one line in table cells. */
+article td > code {
+  white-space: nowrap;
+}
+
+/* Collapsible "Deep dive" sections written with <details>. */
+article details {
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  padding: .5rem 1rem;
+  margin-bottom: 1rem;
+}
+
+article details > summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+article details[open] > summary {
+  margin-bottom: .75rem;
+}
+
+/* Previous / Next links at the bottom of each page: make them a little easier to hit. */
+.next-article > div > a {
+  font-weight: 600;
+  font-size: 1.05rem;
+}

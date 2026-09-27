@@ -1,0 +1,40 @@
+{
+  "$schema": "https://raw.githubusercontent.com/dotnet/docfx/main/schemas/docfx.schema.json",
+  "build": {
+    "content": [
+      {
+        "files": [ "**/*.md", "**/toc.yml" ],
+        "exclude": [ "_site/**", "obj/**", "template/**", ".github/**", "README-site.md" ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [ "images/**" ]
+      }
+    ],
+    "output": "_site",
+    "template": [ "default", "modern", "template" ],
+    "globalMetadata": {
+      "_appName": "Umbraco AI Workshop",
+      "_appTitle": "Umbraco AI Workshop",
+      "_appLogoPath": "images/trh.svg",
+      "_appFaviconPath": "images/favicon.svg",
+      "_appFooter": "<span>Umbraco US Festival 2026 &middot; Beyond the Chatbot workshop &middot; The Rabbit Hole demo by <a href=\"https://github.com/mattbrailsford/TheRabbitHole\">Matt Brailsford</a></span>",
+      "_enableSearch": true,
+      "_disableToc": false,
+      "_disableBreadcrumb": true,
+      "_disableContribution": true,
+      "_lang": "en",
+      "pdf": false
+    },
+    "sitemap": {
+      "baseUrl": "https://marceldigital.github.io/Umbraco-AI-Workshop-2026/",
+      "changefreq": "weekly"
+    },
+    "markdownEngineProperties": {
+      "alerts": {
+        "TRACKER": "alert alert-tracker"
+      }
+    }
+  }
+}

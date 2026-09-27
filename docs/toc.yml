@@ -1,0 +1,31 @@
+# Site table of contents. Order matters: the Previous / Next links at the bottom of each page
+# follow this list from top to bottom (groups without an href are skipped).
+- name: Home
+  href: index.md
+- name: Before you start
+  expanded: true
+  items:
+  - name: "Lesson 0: Before the workshop"
+    href: lessons/lesson-0.md
+- name: "Part 1: Services and contexts"
+  expanded: true
+  items:
+  - name: "Lesson 1: Install & configure Umbraco AI"
+    href: lessons/lesson-1.md
+  - name: "Lesson 2: Transcribe, summarise, write show notes"
+    href: lessons/lesson-2.md
+  - name: "Lesson 3: Show Metadata context"
+    href: lessons/lesson-3.md
+- name: "Part 2: Tools, agents and Automate"
+  expanded: true
+  items:
+  - name: "Lesson 4: Episode guests tool"
+    href: lessons/lesson-4.md
+  - name: "Lesson 5: The Podcast Producer agent"
+    href: lessons/lesson-5.md
+  - name: "Lesson 6: Hand the pipeline to Automate"
+    href: lessons/lesson-6.md
+- name: Wrap-up
+  href: wrap-up.md
+- name: Troubleshooting
+  href: troubleshooting.md
