@@ -530,7 +530,7 @@ On first start, Automate runs its migrations and creates `umbraco/Data/UmbracoAu
 **Administrators** group access to its section. You'll see it in the terminal: *"The Umbraco Automate section has been
 assigned to the Admin group"*.
 
-Log in to the backoffice (reload it if it was already open) and click the new **Automation** section in the top
+Open the backoffice (reload it if it was already open) and click the new **Automation** section in the top
 navigation. It opens on **Welcome to Umbraco Automate**, with a **Create a Workspace** button.
 
 ![The Automation section's welcome screen, with the Create a Workspace button](../images/lesson-6/01-automation-section.png)

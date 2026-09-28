@@ -5,7 +5,7 @@
 
 ## Objective
 
-Get The Rabbit Hole running on your machine, log in to the Umbraco backoffice, and save your AI key where the site can
+Get The Rabbit Hole running on your machine, open the Umbraco backoffice, and save your AI key where the site can
 find it. Along the way, download every NuGet package the workshop needs in one go, so the lessons don't wait on
 conference Wi-Fi.
 
@@ -88,9 +88,30 @@ https://localhost:44339` it's ready.
 ### 6. Visit the site and the backoffice
 
 1. Open **https://localhost:44339**. You should see The Rabbit Hole homepage listing four episodes.
-2. Open **https://localhost:44339/umbraco** and log in:
-   - **Email:** `admin@example.com`
-   - **Password:** `password1234`
+2. Open **https://localhost:44339/umbraco**. You're signed in straight away as the **Administrator**, with no login
+   screen.
+
+> [!NOTE]
+> That's a **development-only** convenience built into the workshop site, so nobody has to type a password after
+> switching branches. If you ever do see the login screen (after logging out, or a long break), click **Sign in with
+> Developer login**, or log in with `admin@example.com` / `password1234`.
+
+<details>
+<summary>Deep dive: how the developer login works</summary>
+
+The code is in `src/TheRabbitHole.Web/AutoLogin/`, wired up by `.AddAutoLogin(builder.Environment)` in `Program.cs`.
+
+- It registers a backoffice **external login provider**, the same mechanism you'd use for Microsoft Entra ID or Google.
+  But its "remote" sign-in never leaves the site: it signs in the user named in `Autologin:Backoffice:Email` in
+  `appsettings.Development.json`.
+- It also tells the backoffice login page to redirect to that provider automatically, which is why you never see the
+  page.
+- It only switches on in the **Development** environment. Never enable anything like it on a real site: anyone who
+  could reach the backoffice would be signed in as that user.
+- `appsettings.Development.json` also raises the backoffice session timeout (`Umbraco:CMS:Global:TimeOut`) to a day,
+  so you aren't timed out while you're busy in your editor.
+
+</details>
 
 ### 7. Find your AI key
 
@@ -170,11 +191,20 @@ reads them.
 ## ✅ Checkpoint
 
 - ⬜ The homepage lists 4 episodes, including **The 500th Question**.
-- ⬜ You can log in to the backoffice, and **Content → Home → Episodes** shows the same 4 episodes.
+- ⬜ The backoffice opens without asking you to log in, and **Content → Home → Episodes** shows the same 4 episodes.
 - ⬜ The top navigation has *no* **AI** section yet. That's what we'll add in Lesson 1.
 - ⬜ You've saved your three user secrets, or you've asked Alex for the workshop key.
 
 ## 🧯 Troubleshooting
+
+<details>
+<summary><strong>I see the Umbraco login screen</strong></summary>
+
+Click **Sign in with Developer login**. The automatic sign-in skips the login screen, except straight after you've logged
+out or been timed out. If there's no Developer login button, make sure you started the site with `dotnet run` (which uses
+the Development environment), and log in with `admin@example.com` / `password1234` meanwhile.
+
+</details>
 
 <details>
 <summary><strong><code>dotnet --version</code> shows 8.x or 9.x</strong></summary>

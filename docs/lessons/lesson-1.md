@@ -112,7 +112,7 @@ dotnet run --project src/TheRabbitHole.Web
 ```
 
 On first start, Umbraco AI creates its database tables and gives the **Administrators** group access to a new **AI** section.
-Log in to https://localhost:44339/umbraco and click **AI** in the top navigation.
+Open https://localhost:44339/umbraco (reload it if it was already open) and click **AI** in the top navigation.
 
 ![The AI section's welcome screen, with the Configuration, Monitoring and Add-ons groups](../images/lesson-1/01-ai-section.png)
 

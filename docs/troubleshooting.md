@@ -90,7 +90,8 @@ creates a local branch that tracks `origin/lesson-3-end` and switches to it, dat
 dotnet run --project src/TheRabbitHole.Web
 ```
 
-The backoffice now has that lesson's configuration. If you're asked to log in again, use the same details as before.
+The backoffice now has that lesson's configuration, and it signs you in again automatically. If you land on a sign-in
+screen instead, click **Sign in with Developer login**.
 You can keep working on this branch. If you need to jump again later, follow the same steps.
 
 ### Going back to your own work
