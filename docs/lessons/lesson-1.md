@@ -55,9 +55,6 @@ dotnet add src/TheRabbitHole.Core package Umbraco.AI.Core --version 17.3.5
 > works with any OpenAI-compatible endpoint, including Microsoft Foundry's. So the same provider serves all three
 > [key paths](../ai-key.md): OpenAI, your own Foundry, and the workshop key (which runs on Foundry).
 
-> [!TIP]
-> You restored `main` in Lesson 0, so these packages come straight from your local NuGet cache. This is instant.
-
 ### Step 3: Suppress the experimental speech-to-text warning
 
 Umbraco AI is built on **Microsoft.Extensions.AI**, which marks its speech-to-text types as *experimental* (diagnostic
@@ -91,7 +88,7 @@ We use references for three values. The **API key** goes under `Umbraco:AI:Secre
 OpenAI or at a Foundry resource. Keeping them in configuration means the same backoffice setup works for everyone, and
 it's why every lesson branch's database snapshot works on your machine, whichever provider you use.
 
-Check all three are there. This prints your key, so don't run it on a shared screen:
+Check all three are there:
 
 ```bash
 dotnet user-secrets list --project src/TheRabbitHole.Web
@@ -339,8 +336,6 @@ your user secrets were saved under the same names:
 ```bash
 dotnet user-secrets list --project src/TheRabbitHole.Web
 ```
-
-This prints your key, so don't run it on a shared screen.
 
 </details>
 

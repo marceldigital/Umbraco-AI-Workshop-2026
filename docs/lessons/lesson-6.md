@@ -565,10 +565,12 @@ A **workspace** groups automations and sets the security boundary. Its automatio
    - **Allowed Connections:** leave empty.
 4. Click **Save**.
 
-![The Podcasting Workspace's Membership box: Service Account Key set to Administrator, User Groups set to Administrators, Allowed Connections empty](../images/lesson-6/03-create-workspace.png)
+![The saved Podcasting Workspace: Service Account Key set to Administrator, User Groups set to Administrators, and the tree now listing Podcasting Workspace under Automations](../images/lesson-6/03-create-workspace.png)
 
-The tree now shows **Automations → Podcasting Workspace**, and the section gets three tabs: **Overview**, **Runs** and
-**Approvals**.
+The tree now shows **Automations → Podcasting Workspace**. Click **Automation** in the top navigation again: the
+section's front page now has three tabs, **Overview**, **Runs** and **Approvals**, and tells you the workspace is ready.
+
+![The Automation section after creating the workspace: Overview, Runs and Approvals tabs, and "Your workspace is ready"](../images/lesson-6/03b-workspace-ready.png)
 
 What's happening:
 
@@ -585,8 +587,8 @@ if it has audio, run the Podcast Producer.
 **Create it.** In the tree, open **Podcasting Workspace** (under **Automations**), click **Create** and choose
 **Automation**. (The other option, **Folder…**, is for organising automations.) The designer opens: a name and a
 description at the top, **Design** and **Info** tabs, an empty canvas with **+ ADD TRIGGER**, and **Save** and **Save and
-publish** buttons. Name it **Podcast Production**. The description is optional; the dry run used *Produce podcast episode
-content from the recording*.
+publish** buttons. Name it **Podcast Production**. The description is optional; we used *Produce podcast episode content
+from the recording*.
 
 **The trigger.** Click **+ ADD TRIGGER** on the canvas. The **Select Trigger** dialog groups the triggers: **AI** (AI
 Agent Request, AI Agent Run Completed, AI Agent Run Failed), **Content** (including **Content Saved**), **Core** (Manual
@@ -605,8 +607,8 @@ Then click **Save**.
 
 That second setting is Automate's loop guard. Remember the in-flight set from Lecture 3? The agent saves the same episode
 once per `save_episode_*` tool, and each save raises Content Saved again. Automate tracks which automation caused an
-event, and **Skip if this would loop** stops Podcast Production's own saves from starting Podcast Production again. The
-dry run confirmed it: one **Save and publish**, exactly one Podcast Production run.
+event, and **Skip if this would loop** stops Podcast Production's own saves from starting Podcast Production again. You'll
+see it in Step 13: one **Save and publish**, exactly one Podcast Production run.
 
 > [!WARNING]
 > Close every trigger and step panel with its **Save** button. Pressing **Escape** discards the step.
@@ -695,8 +697,7 @@ This one replaces the SignalR hub and the toast script, with no code at all.
 What's happening:
 
 - **Notify Editor** is a built-in action (`umbracoAutomate.notifyEditor`). It sends a realtime toast to any backoffice
-  user who currently has that content item open. Matt built this action live on stage at Codegarden; it now ships with
-  Automate, so we don't write it.
+  user who currently has that content item open. It ships with Automate, so there's nothing to write.
 - The Content Key binding is `${ trigger.episodeKey }`, the camelCase name of `EpisodeKey` on your output model. It isn't
   `trigger.contentKey`: that's Content Saved's output, and our trigger doesn't have it.
 - The **Message** is bound too, on purpose, to show off what your custom trigger gives you. `${ trigger.episodeTitle }`
@@ -760,10 +761,10 @@ where runs wait for a human (see the Stretch goals).
 **The run detail.** Click the **Podcast Production** run. A **Run** panel opens (titled with the start of the run's ID),
 with two boxes:
 
-- **Steps:** each step with its duration and status. In the dry run, **Get Content** took about 31 ms and **Run AI
+- **Steps:** each step with its duration and status. When we built this workshop, **Get Content** took about 31 ms and **Run AI
   Agent** about 12 seconds, both **Completed**. Expand a step to see when it **Started** and **Completed**, and its
   **Retry Count**.
-- **Run Info:** the run's **Status**, **Started** and **Completed** times, **Initiated By** (`system` in the dry run) and
+- **Run Info:** the run's **Status**, **Started** and **Completed** times, **Initiated By** (`system` for this run) and
   the **Automation Version** that ran.
 
 There's also a **Replay** button, which runs it again.

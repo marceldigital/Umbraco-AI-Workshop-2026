@@ -572,8 +572,8 @@ Lesson 3's context reads *published* episodes, and in Lesson 6 Umbraco Automate 
 
 ### Step 11: Wait for the toast, then refresh
 
-Transcribing four minutes of audio plus two chat calls takes **about 20 seconds** (up to a minute when everyone is doing
-it at once). Transcription is most of that, around 15 seconds. Watch the terminal running the site. You should see
+Transcribing four minutes of audio plus two chat calls takes **up to a minute**, depending on your provider. Transcription
+is most of that. Watch the terminal running the site. You should see
 `Transcribing podcast episode …`, and later `Podcast episode … transcribed, summarised and show notes saved`. Then a green
 toast appears in the backoffice: **Podcast episode processed**, *"Community, AI, and the Umbraco Way — transcript and show
 notes are ready."*
@@ -597,7 +597,7 @@ https://localhost:44339 and click through to the episode.
 
 ## ✅ Checkpoint
 
-- ⬜ The **Podcast episode processed** toast appeared, about 20 seconds after you saved.
+- ⬜ The **Podcast episode processed** toast appeared, within about a minute of saving.
 - ⬜ After a refresh, episode 5 has a **Transcript**, a short plain-text **Summary**, and HTML **Show Notes** with an
   overview paragraph and a bulleted list of topics.
 - ⬜ After publishing again, the episode page on the site shows the summary, the notes and the transcript.
@@ -615,7 +615,7 @@ you're there, check any **links** the show notes contain.
 1. **The previous episode.** The hosts mention their last episode, episode #4, **"The 500th Question"**. The model has no
    idea what that is, so it gets it wrong in one way or another. It varies from run to run: the episode is left out
    altogether, mislabelled as "the 500th episode", or mentioned but not linked, because the model doesn't know the URL.
-2. **The guests' names.** In the dry run the model wrote **"Sebastian Jansson"** (or "Sebastian Janssen") and **"Lottie
+2. **The guests' names.** When we tested this lesson, the model wrote **"Sebastian Jansson"** (or "Sebastian Janssen") and **"Lottie
    Pitcher"**. The correct spellings are **Sebastiaan Janssen** and **Lotte Pitcher**. Speech-to-text writes what it
    hears, and the model believes the transcript.
 
@@ -625,9 +625,9 @@ Both bugs have the same root cause: **the model only knows what's in the transcr
 show, which is a context (Lesson 3, next). Bug 2 needs the *ability* to look something up, which is a tool (Lesson 4, after
 the break).
 
-**Bonus: a hallucination.** In the dry run, the show notes gave both guests a **Mastodon profile** link, with
+**Bonus: a hallucination.** When we tested this lesson, the show notes gave both guests a **Mastodon profile** link, with
 plausible-looking URLs. The transcript only says the guests are "on Mastodon". The model invented the addresses. That's a
-hallucination: confident, well-formatted and wrong. Check yours, and keep an eye on those links in Lesson 3.
+hallucination: confident, well-formatted and wrong. Check yours. Lesson 4 gives the model the guests' real details.
 
 </details>
 
@@ -641,10 +641,10 @@ Where did the Brand Voice come in? You never mentioned it in C#. Let's look at w
    - the **transcription**: Feature **Inline-Speech-To-Text**, Profile **Transcriber-Profile**, Model `gpt-4o-transcribe`
 
    You can't search the list for your call aliases. Instead, under each Feature name there's an **ID that Umbraco AI
-   derives from your call alias**, so every call from the same `WithAlias(...)` line always gets the same ID. In the dry
-   run the show notes call was `733e4fb6…` and the summary `7df279d3…`. Make a note of yours: they stay the same for the
+   derives from your call alias**, so every call from the same `WithAlias(...)` line always gets the same ID. When we built
+   this workshop, the show notes call was `733e4fb6…` and the summary `7df279d3…`. Make a note of yours: they stay the same for the
    rest of the workshop. You can also tell the two chat calls apart by **Tokens** (input / output): the show notes call has
-   far more output tokens (the dry run had about 1,100 / 380 for the show notes against 1,100 / 64 for the summary).
+   far more output tokens (ours had about 1,100 / 380 for the show notes against 1,100 / 64 for the summary).
 
 ![The AI Logs list with the three entries from one run: two Inline-Chat calls on gpt-4.1 and one Inline-Speech-To-Text call on gpt-4o-transcribe](../images/lesson-2/05-logs-list.png)
 
@@ -705,7 +705,7 @@ tells you what went wrong. The usual suspects:
   ([Lesson 1, Step 8](lesson-1.md#step-8-create-the-transcription-connection-and-the-transcriber-profile)). On Foundry
   or the workshop key, that user secret must be the transcription **deployment** URL, not the `/openai/v1/` endpoint.
 - **A user secret is missing.** Check the key is stored under exactly `Umbraco:AI:Secrets:ApiKey` and both endpoints
-  under `Umbraco:AI:Variables`, then restart the site. (This prints your key, so not on a shared screen.)
+  under `Umbraco:AI:Variables`, then restart the site.
 
   ```bash
   dotnet user-secrets list --project src/TheRabbitHole.Web

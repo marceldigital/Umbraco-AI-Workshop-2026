@@ -449,10 +449,10 @@ That's the fourth box ticked. 🎉
 ## 🔍 Under the hood
 
 Open **AI → Logs**. The two newest entries are the chat calls you just triggered, both **Inline-Chat**. Find the show
-notes call by its Feature ID (the same ID it had in Lessons 2 and 3, `733e4fb6…` in the dry run) or by its **Tokens**:
+notes call by its Feature ID (the same ID it had in Lessons 2 and 3, `733e4fb6…` when we built this workshop) or by its **Tokens**:
 it has the most output tokens. Click its timestamp to open **Audit Log Details**.
 
-Look at **Tokens** first. In the dry run the show notes call's input jumped from about 1,300 tokens in Lesson 3 to about
+Look at **Tokens** first. When we built this workshop, the show notes call's input jumped from about 1,300 tokens in Lesson 3 to about
 3,100 now. The transcript didn't get longer. But the tool's schema and description, and later the tool's result, are now
 part of the conversation, and the conversation goes to the model twice: once when it asks for the tool, and again when it
 writes the notes with the result. You pay for all of it like any other text.
@@ -475,7 +475,7 @@ That's the loop from Lecture 5, written down for you: prompt and tool list → t
 the result goes back → the model finishes. It's all one `GetChatResponseAsync` call; Umbraco AI's function-invoking
 middleware runs the loop for you.
 
-Now open the summary entry (the other Inline-Chat entry, `7df279d3…` in the dry run). Same pattern, which means the CRM
+Now open the summary entry (the other Inline-Chat entry, `7df279d3…` when we built this workshop). Same pattern, which means the CRM
 was asked for the same two guests **twice** per episode. The first stretch goal fixes that. Its input tokens went up by
 about the same amount: together, the two calls now use roughly 6,000 input tokens per episode. Keep that number in mind
 for Lesson 5.
@@ -569,7 +569,7 @@ can carry straight on with the next lesson. Your API key lives in user-secrets, 
 
 - **Cache the CRM lookup.** Both chat calls ask for the same guests. Inject Umbraco's `AppCaches` and check
   `_cache.RuntimeCache.Get(key)` before calling the CRM, then store the result with
-  `_cache.RuntimeCache.Insert(key, () => result, TimeSpan.FromMinutes(5))`. *Hint: Matt's original used
+  `_cache.RuntimeCache.Insert(key, () => result, TimeSpan.FromMinutes(5))`. *Hint: you might reach for
   `AppCaches.RequestCache`, but our tool runs inside a background service where there's no HTTP request, so a request
   cache never gets a hit. Use the runtime cache with an expiry instead.*
 - **Credit the guests properly.** Ask for an "About our guests" section with each guest's bio and website link in the

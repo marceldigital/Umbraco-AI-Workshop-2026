@@ -17,10 +17,9 @@ live from Umbraco's published content. Then you'll plug it in without touching t
 
 By the end, the regenerated show notes mention **The 500th Question** by its real title and link to its page.
 
-> [!IMPORTANT]
-> Custom context resource types aren't covered in the official Umbraco AI docs yet. Everything on this page was confirmed
-> against the Umbraco.AI 17.3.5 source, so for now **this page is the documentation**. Because the API is undocumented,
-> it could change in a future version.
+> [!NOTE]
+> Custom context resource types aren't in the official Umbraco AI documentation yet, so the API could change in a later
+> version. This lesson was written against Umbraco.AI 17.3.5.
 
 ## What you'll change
 
@@ -168,8 +167,10 @@ public sealed class ShowMetadataResourceType
 
 What's happening:
 
-- **`AIContextResourceTypeBase<TSettings, TOutput>`** is the base class. You give it your two models, and it handles
-  turning stored settings into a `ShowMetadataResourceSettings` for you.
+- **`AIContextResourceTypeBase<TSettings, TOutput>`** is the base class, typed with your two models. When an editor
+  fills in a Show Metadata resource in the backoffice (Step 11), Umbraco saves those settings with the context. Before
+  each AI call, the base class turns the saved values back into a `ShowMetadataResourceSettings` object and hands it to
+  your `ResolveDataAsync`, so you never parse anything yourself.
 - **The constructor** passes `IAIContextResourceTypeInfrastructure` to the base (it's what builds the backoffice form from
   your `[AIField]`s) and takes our own dependency, `IUmbracoContextFactory`. Resource types are created by dependency
   injection and live for the whole life of the site, so we inject a factory and create what we need per call.
@@ -201,8 +202,9 @@ What's happening:
   you've created contexts with it.
 - **`"Show Metadata"`**, **`Description`** and **`Icon`** are what editors see in the backoffice when they pick a
   resource type.
-- **Discovery is automatic.** Resource types are *discoverable*, like document types that nobody has used yet: compile,
-  restart, and Umbraco finds the class. There's no composer and no registration code.
+- **Discovery is automatic.** Umbraco scans your code on startup and finds the class by its attribute, the same way it
+  finds your composers. There's no registration code: compile, restart, and it's there. Tools work the same way in
+  Lesson 4.
 
 ### Step 7: Resolve the data, part 1: find the site root
 
@@ -513,8 +515,8 @@ What's happening:
 
 - Two new lines: the instruction, and a blank line to separate it from the Episode Context section.
 - **"Only if you know the URL"** gives the model permission to link *and* a condition. Without the condition, models
-  happily invent plausible-looking URLs, like the Mastodon links you may have seen in Lesson 2. With it, they link only
-  what they've actually been given, such as the URLs in the Show Metadata block.
+  happily invent plausible-looking episode URLs. With it, they link only episodes they've actually been given URLs for,
+  like the ones in the Show Metadata block.
 - As Lecture 4 put it: knowledge plus a clear instruction fixes the bug. Either one on its own is less reliable.
 - The summary prompt stays as it is. It's plain text for a listing card, with no links.
 
@@ -536,15 +538,12 @@ Then, in the backoffice:
 4. Wait for the toast. It's much quicker than in Lesson 2: about 10 seconds. Then **refresh the page**.
 
 The new show notes should mention **The 500th Question** by its real title, with a link to its page. Where it appears
-and how it's worded varies. In the dry run it was a *"Previous episode: The 500th Question"* line at the end. Hover over
+and how it's worded varies. When we tested this lesson, it was a *"Previous episode: The 500th Question"* line at the end. Hover over
 the link (or click it on the site) to check it goes to `https://localhost:44339/episodes/the-500th-question/`.
 
 ![The regenerated show notes, ending with a linked "Previous episode: The 500th Question" line](../images/lesson-3/05-show-notes-linked.png)
 
-Look at the guest lines too. If Lesson 2's run invented Mastodon profile links, they're most likely gone now. You didn't
-ask for that: the *"only if you know the URL"* condition you added for episodes also stopped the model making up links
-for the guests. One clear rule can fix more than the bug you wrote it for. The guest *names* are still wrong, though.
-That's Lesson 4.
+The guest *names* are probably still wrong. That's Lesson 4.
 
 As in Lesson 2, the background job only saved a draft. Click **Save and publish** again to put the new show notes live.
 
@@ -554,7 +553,6 @@ As in Lesson 2, the background job only saved a draft. Click **Save and publish*
   **Always** badge, and Site Root set to **Home**.
 - ⬜ The **Podcast Profile** has two contexts: **Brand Voice** and **Podcast Metadata**.
 - ⬜ The regenerated show notes mention **The 500th Question** and link to `…/episodes/the-500th-question/`.
-- ⬜ If Lesson 2 invented Mastodon links for the guests, they're most likely gone.
 - ⬜ The guest names are probably still wrong ("Sebastian", "Lottie"). That's expected: Lesson 4 fixes them.
 
 LLM output varies. If this run didn't link the episode, clear the Show Notes and save again. Troubleshooting has more.
@@ -562,7 +560,7 @@ LLM output varies. If this run didn't link the episode, clear the Show Notes and
 ## 🔍 Under the hood
 
 Open **AI → Logs**. There's just one new entry this time: an **Inline-Chat** call with the same ID as Lesson 2's show
-notes call (`733e4fb6…` in the dry run), because it comes from the same `WithAlias("podcast-episode-show-notes")` line.
+notes call (`733e4fb6…` when we built this workshop), because it comes from the same `WithAlias("podcast-episode-show-notes")` line.
 Click its timestamp to open **Audit Log Details**. In the **Prompt**:
 
 - **Your system prompt**, now with the new *"If a previous episode is mentioned…"* line.
@@ -575,15 +573,15 @@ Click its timestamp to open **Audit Log Details**. In the **Prompt**:
 ![Audit Log Details showing the Show Metadata block injected right after Brand Voice](../images/lesson-3/06-log-show-metadata-block.png)
 
 Notice that episode 5 lists *itself* under "Latest episodes". It's published, so it's one of the three newest. That's
-harmless: in the dry run the model simply ignored it and linked only The 500th Question.
+harmless: when we tested this lesson, the model simply ignored it and linked only The 500th Question.
 
 That one screen shows the whole chain from Lecture 4: your class was **discovered** at startup, the **context** used it,
 the **profile** attached the context, and the **prompt** told the model what to do with it. `ResolveDataAsync` ran during
 this very call, on the background worker, which is why it needed `EnsureUmbracoContext()`.
 
 One more thing to notice: **Always means always.** Every call through the Podcast Profile now carries the Show Metadata
-block, including summary calls that don't need it. Compare **Tokens** with Lesson 2's show notes entry: in the dry run the
-input went from about 1,130 to about 1,260 tokens, so the block (plus your new prompt line) costs roughly 130 tokens per
+block, including summary calls that don't need it. Compare **Tokens** with Lesson 2's show notes entry: when we built this
+workshop, the input went from about 1,130 to about 1,260 tokens, so the block (plus your new prompt line) costs roughly 130 tokens per
 call. That's small here, but it's the cost of Always, and the reason On-Demand exists.
 
 ## 🧯 Troubleshooting
@@ -693,6 +691,10 @@ More detail: [How to jump to a lesson's end branch](../troubleshooting.md#how-to
   title, then regenerate the show notes. Does the model link related episodes by topic, not just by name? *Hint:
   `sb.AppendLine($"  {episode.Summary}");` inside the `foreach`, but you'll need braces around the loop body. Compare the
   token counts in the logs.*
+- **Stop invented guest links too.** The *"only if you know the URL"* rule is about episodes. If your show notes still
+  invent links for the guests (Mastodon profiles, for example), extend the prompt so the model only links URLs it has
+  actually been given, anywhere in the notes. *Hint: one sentence in `showNotesPrompt`. Clear the Show Notes and compare a
+  few runs, because LLM output varies.*
 - **Describe the show.** Add a sentence or two about what The Rabbit Hole is to the **Brand Voice** context (its Target
   Audience field is a good spot), and compare the overview paragraph. *Hint: Show Metadata already sends Home's
   Description ("The latest AI news in Umbraco"). Which is the better home for it: static text in a context, or live

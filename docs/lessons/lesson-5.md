@@ -814,8 +814,8 @@ The editor has four tabs: **Settings**, **Availability**, **Governance** and **I
 > **Select AI profile** also lists the **Transcriber Profile**. Don't pick it. It's a speech-to-text profile, and an agent
 > needs a chat model to reason and call tools. Choose **Podcast Profile**.
 
-The instructions are Matt Brailsford's, from his Codegarden talk, reused with permission, plus a short **How you work**
-section at the end that we added after the dry run (more on that below). Paste all of it:
+These instructions tell the agent who it is, what a finished episode looks like, and how to behave while it works. The
+**How you work** section at the end sets its ground rules (more on that below). Paste all of it:
 
 ```text
 You are the producer of The Rabbit Hole.
@@ -856,9 +856,9 @@ will answer questions, don't redo work that's already done, a summary only count
 finish line.
 
 > [!IMPORTANT]
-> **Why the extra section? Instructions aren't perfectly portable between models.** Matt wrote his instructions for
-> Claude Sonnet, and they work there as they are. In our dry run on the workshop's GPT-4.1, the same instructions made the
-> agent do two things wrong. It called `transcribe_episode` even though the episode already had a transcript. And it ended
+> **Why the extra section? Instructions aren't perfectly portable between models.** The first part of these
+> instructions was written for Claude Sonnet, and works there as it is. When we built this workshop on GPT-4.1, the same
+> instructions made the agent do two things wrong. It called `transcribe_episode` even though the episode already had a transcript. And it ended
 > its turn with *"Stand by for the summary and show notes"* without saving anything. In a chat that would be fine, but
 > here the run simply ends, because nobody is there to reply. An agent that runs unattended needs an explicit "keep
 > going until the job is done" rule. The **How you work** section fixed both problems. The lesson to take home: whenever
@@ -866,7 +866,7 @@ finish line.
 
 ![The agent's Settings tab: Description, AI Profile set to Podcast Profile, and the instructions in the markdown editor](../images/lesson-5/02-agent-settings.png)
 
-*The screenshot shows Matt's original text. Yours ends with the How you work section.*
+*The screenshot shows the instructions before the How you work section was added. Yours ends with it.*
 
 #### 8c. The Availability tab
 
@@ -874,7 +874,7 @@ The **Availability** tab has two boxes: **Surface**, with the **Surfaces** list 
 with **Allow Rules** and **Deny Rules**. Leave them all empty.
 
 Surfaces decide where an agent can *appear*, such as the Copilot chat or Automate workflows. Running an agent from your
-own code doesn't need one: the dry run confirmed it. You'll add the **Automations** surface in Lesson 6, once Automate is
+own code doesn't need one. You'll add the **Automations** surface in Lesson 6, once Automate is
 installed.
 
 ![The Availability tab with no surfaces and no allow or deny rules](../images/lesson-5/03-agent-availability.png)
@@ -899,8 +899,8 @@ available."* You'll spot one in the log shortly.
 2. Clear **Summary** and **Show Notes**. Keep the **Transcript** again.
 3. Click **Save**.
 4. Wait for the **Podcast episode processed** toast. It's the same toast as in Lesson 2, because `publish_episode_report`
-   sends the same SignalR message. In the dry run it took about 12 seconds, a little longer than Lesson 4, because the
-   agent works in several turns.
+   sends the same SignalR message. It usually takes 10 to 30 seconds, depending on your provider: a little longer than
+   Lesson 4, because the agent works in several turns.
 5. Refresh the page (**F5**).
 
 ## ✅ Checkpoint
@@ -922,8 +922,8 @@ Open **AI → Logs**. The whole agent run is **one entry**, with Feature **Agent
 Profile. The ID under the Feature name ends in a version, such as `/v1` or `/v2`. It goes up every time you save a change
 to the agent, so you can always tell which version of the instructions a run used.
 
-Click the entry's timestamp and scroll to the **Response**. Instead of one answer, you'll find a conversation. In the dry
-run the agent's plan unfolded like this:
+Click the entry's timestamp and scroll to the **Response**. Instead of one answer, you'll find a conversation. When we
+tested this lesson, the agent's plan unfolded like this:
 
 1. `get_episode`. The result shows a transcript, but no summary or show notes.
 2. **No `transcribe_episode` call.** Nobody wrote `if (transcript exists) skip` in C#. The agent saw the transcript and
@@ -936,7 +936,7 @@ run the agent's plan unfolded like this:
 5. `publish_episode_report`, its "done" signal, which fired your toast.
 6. A short `[assistant]` reply confirming what it saved.
 
-The whole run took about 12 seconds. The order and the pairing can vary between runs. Long tool arguments and results
+That run took about 12 seconds. The order and the pairing can vary between runs. Long tool arguments and results
 are shortened in the log (look for `(truncated, … chars)`), so the `get_episode` result doesn't show the whole
 transcript, but the model received all of it. In the terminal you'll also find the agent's own account of the run:
 `Publishing episode report for …: … (guests: 2, related: …)`.
@@ -945,8 +945,8 @@ transcript, but the model received all of it. In the terminal you'll also find t
 
 ### Count the cost
 
-Now compare what the two approaches cost. The **Logs** list makes it easy, because **Tokens** is right there. In the dry
-run:
+Now compare what the two approaches cost. The **Logs** list makes it easy, because **Tokens** is right there. When we
+built this workshop:
 
 - the agent run used about **12,950 input and 785 output** tokens
 - Lesson 4's two chat calls used about **6,200 input and 530 output** tokens between them
@@ -957,7 +957,7 @@ instructions, the tool definitions and the growing conversation, including every
 
 ![The Logs list: Agent runs at /v2 and /v1 above Lesson 4's two Inline-Chat calls, with their token counts](../images/lesson-5/05b-logs-agent-vs-manual.png)
 
-The screenshot also shows the dry run's first attempt, before the How you work section existed. The Agent entry ending in
+The screenshot also shows our first attempt while building this workshop, before the How you work section existed. The Agent entry ending in
 `/v1` used fewer tokens because it stopped early without saving anything, and the **Inline-Speech-To-Text** entry above it
 is the transcription it started for no reason (from inside `transcribe_episode`, with the same ID as Lesson 2's
 transcription, `a0f34063…`, because it's the same alias). Changing the instructions bumped the agent to `/v2`.
@@ -970,8 +970,8 @@ in Logs is the place to look.
 
 ![The Analytics dashboard: usage totals, the Usage Over Time chart, and the By Provider, By Model, By Profile and By User breakdowns](../images/lesson-5/06-analytics.png)
 
-In Matt's reference project the gap was bigger: the three manual calls used about **4,000 tokens** and the agent about
-**40,000**, roughly ten times as much. The more turns an agent takes and the bigger its tool results, the faster its cost
+The gap can be much bigger. In an earlier version of this demo, the three manual calls used about **4,000 tokens** and
+the agent about **40,000**, roughly ten times as much. The more turns an agent takes and the bigger its tool results, the faster its cost
 grows.
 
 So when is an agent worth it? If the path is fixed and runs thousands of times a day, plain calls are cheaper and more

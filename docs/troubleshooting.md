@@ -164,8 +164,7 @@ Work through these in order:
 ## AI provider errors
 
 Every AI call reads three user secrets: `Umbraco:AI:Secrets:ApiKey`, `Umbraco:AI:Variables:ChatEndpoint` and
-`Umbraco:AI:Variables:TranscriptionEndpoint`. Most provider errors come down to one of them. Check they're all there
-(this prints your key, so not on a shared screen):
+`Umbraco:AI:Variables:TranscriptionEndpoint`. Most provider errors come down to one of them. Check they're all there:
 
 ```bash
 dotnet user-secrets list --project src/TheRabbitHole.Web
