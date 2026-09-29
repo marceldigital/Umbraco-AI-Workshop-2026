@@ -11,12 +11,18 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Fluid.Core" Version="2.40.0" />
         <PackageReference Include="Umbraco.AI.Agent.Core" Version="17.1.7" />
         <PackageReference Include="Umbraco.AI.Core" Version="17.3.5" />
         <PackageReference Include="Umbraco.Automate.Core" Version="17.4.0" />
         <PackageReference Include="Umbraco.Cms.Core" Version="17.7.0" />
         <PackageReference Include="Umbraco.Cms.Infrastructure" Version="17.7.0" />
         <PackageReference Include="Umbraco.Cms.Web.Common" Version="17.7.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- Prompt templates are compiled into the assembly and loaded by name, e.g. "Prompts/show-metadata.liquid". -->
+        <EmbeddedResource Include="Prompts\*.liquid" LogicalName="Prompts/%(Filename)%(Extension)" />
     </ItemGroup>
 
 </Project>

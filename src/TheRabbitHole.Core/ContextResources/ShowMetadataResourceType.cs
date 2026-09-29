@@ -1,5 +1,5 @@
-using System.Text;
 using TheRabbitHole.Core.Models;
+using TheRabbitHole.Core.Prompts;
 using Umbraco.AI.Core.Contexts.ResourceTypes;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.Web;
@@ -14,13 +14,16 @@ public sealed class ShowMetadataResourceType
     : AIContextResourceTypeBase<ShowMetadataResourceSettings, ShowMetadataResourceOutput>
 {
     private readonly IUmbracoContextFactory _umbracoContextFactory;
+    private readonly PromptTemplates _promptTemplates;
 
     public ShowMetadataResourceType(
         IAIContextResourceTypeInfrastructure infrastructure,
-        IUmbracoContextFactory umbracoContextFactory)
+        IUmbracoContextFactory umbracoContextFactory,
+        PromptTemplates promptTemplates)
         : base(infrastructure)
     {
         _umbracoContextFactory = umbracoContextFactory;
+        _promptTemplates = promptTemplates;
     }
 
     public override Task<ShowMetadataResourceOutput?> ResolveDataAsync(
@@ -60,22 +63,5 @@ public sealed class ShowMetadataResourceType
     }
 
     protected override string FormatDataForLlm(ShowMetadataResourceOutput data)
-    {
-        var sb = new StringBuilder();
-
-        if (!string.IsNullOrWhiteSpace(data.ShowName))
-            sb.AppendLine($"Show: {data.ShowName}");
-
-        if (!string.IsNullOrWhiteSpace(data.ShowDescription))
-            sb.AppendLine($"Description: {data.ShowDescription}");
-
-        if (data.LatestEpisodes.Count > 0)
-        {
-            sb.AppendLine("Latest episodes:");
-            foreach (var episode in data.LatestEpisodes)
-                sb.AppendLine($"- #{episode.Number} \"{episode.Name}\" — {episode.Url}");
-        }
-
-        return sb.ToString().TrimEnd();
-    }
+        => _promptTemplates.Render("show-metadata", data);
 }

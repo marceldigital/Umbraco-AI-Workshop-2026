@@ -1,0 +1,19 @@
+{%- comment -%}
+  The Show Metadata context resource (Lesson 3), as the model sees it.
+  The model is a ShowMetadataResourceOutput: showName, showDescription and latestEpisodes.
+{%- endcomment -%}
+{%- if showName != blank %}
+Show: {{ showName }}
+{%- endif %}
+{%- if showDescription != blank %}
+Description: {{ showDescription }}
+{%- endif %}
+{%- if latestEpisodes != empty %}
+Latest episodes:
+{%- for episode in latestEpisodes %}
+- #{{ episode.number }} "{{ episode.name }}" — {{ episode.url }}
+{%- if episode.summary != blank %}
+  {{ episode.summary | truncate: 160 }}
+{%- endif %}
+{%- endfor %}
+{%- endif %}

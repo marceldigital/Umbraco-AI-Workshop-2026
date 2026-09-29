@@ -35,6 +35,7 @@ Browse to https://localhost:44339. The backoffice at https://localhost:44339/umb
 |---|---|
 | `init` | The starting point: the podcast site with no AI features yet |
 | `lesson-1-end` … `lesson-6-end` | The finished state of each lesson. Check one out if you get stuck |
+| `lesson-7-end` | The bonus lesson: prompt templates in Liquid |
 | `main` | The finished project plus the workshop docs |
 
 ## Credits

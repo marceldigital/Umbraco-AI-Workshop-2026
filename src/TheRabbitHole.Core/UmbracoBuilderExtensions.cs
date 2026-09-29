@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using TheRabbitHole.Core.Integrations.HubSpot;
+using TheRabbitHole.Core.Prompts;
 using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Cms.Core.Notifications;
 using Umbraco.Cms.Web.Common.ApplicationBuilder;
@@ -21,6 +22,9 @@ public static class UmbracoBuilderExtensions
         builder.Services.AddOptions<HubSpotOptions>()
             .BindConfiguration(HubSpotOptions.SectionName);
         builder.Services.AddHttpClient<HubSpotGuestClient>();
+
+        // Liquid prompt templates (Prompts/*.liquid)
+        builder.Services.AddSingleton<PromptTemplates>();
 
         // SignalR hub for real-time updates in the backoffice
         builder.Services.AddSignalR();
