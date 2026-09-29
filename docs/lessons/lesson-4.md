@@ -424,8 +424,8 @@ dotnet run --project src/TheRabbitHole.Web
 ![Episode 5 with the Summary and Show Notes cleared and the Transcript kept](../images/lesson-4/01-cleared-fields.png)
 
 3. Click **Save**.
-4. Wait for the **Podcast episode processed** toast. It takes about 10 seconds: two chat calls, each with a quick trip to
-   the CRM.
+4. Wait for the **Podcast episode processed** toast. It takes about 10 seconds, a little longer on some providers: two chat
+   calls, each with a quick trip to the CRM.
 5. Refresh the page (**F5**) to load the new values.
 
 Both the summary and the show notes now spell the guests **Sebastiaan Janssen** and **Lotte Pitcher**. The show notes

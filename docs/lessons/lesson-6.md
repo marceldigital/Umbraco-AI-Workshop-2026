@@ -715,7 +715,7 @@ What's happening:
 1. Go to **Content → Home → Episodes** and open episode 5.
 2. Clear the **Summary** and **Show Notes** fields.
 3. Click **Save and publish**, not just Save.
-4. Stay on the page. After about 13 seconds, **one** green toast appears: **Episode produced**, *"Community, AI, and
+4. Stay on the page. Within about 30 seconds, depending on your provider, **one** green toast appears: **Episode produced**, *"Community, AI, and
    the Umbraco Way now has a transcript, summary and show notes."* That's your Notify Editor step, with the episode title
    filled in from your trigger's output.
 
@@ -740,8 +740,8 @@ the only one.
 - ⬜ The **Automation** section shows **Podcasting Workspace** with **Podcast Production** and **Podcast Notification**,
   both published.
 - ⬜ **Podcast Producer** has the **Automations** surface.
-- ⬜ Saving and publishing episode 5 with an empty summary shows exactly **one** green **Episode produced** toast after
-  about 13 seconds, and after a reload the summary and show notes are filled in again.
+- ⬜ Saving and publishing episode 5 with an empty summary shows exactly **one** green **Episode produced** toast within
+  about 30 seconds, and after a reload the summary and show notes are filled in again.
 - ⬜ **Recent Activity** on the Overview (or the **Runs** tab) shows a completed **Podcast Production** run and a
   completed **Podcast Notification** run.
 - ⬜ The Podcast Production run's steps, **Get Content** and **Run AI Agent**, are both **Completed**.

@@ -535,7 +535,8 @@ Then, in the backoffice:
    **Cmd+A** on a Mac), and delete it. Leave the Transcript and Summary alone, so only the show notes call runs. There's
    no transcription this time, so it's faster and cheaper.
 3. Click **Save and publish**.
-4. Wait for the toast. It's much quicker than in Lesson 2: about 10 seconds. Then **refresh the page**.
+4. Wait for the toast. It's much quicker than in Lesson 2: about 10 seconds, a little longer on some providers. Then
+   **refresh the page**.
 
 The new show notes should mention **The 500th Question** by its real title, with a link to its page. Where it appears
 and how it's worded varies. When we tested this lesson, it was a *"Previous episode: The 500th Question"* line at the end. Hover over
