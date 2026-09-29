@@ -29,5 +29,10 @@
     href: lessons/lesson-6.md
 - name: Wrap-up
   href: wrap-up.md
+- name: Bonus
+  expanded: true
+  items:
+  - name: "Lesson 7: Prompt templates"
+    href: lessons/lesson-7.md
 - name: Troubleshooting
   href: troubleshooting.md

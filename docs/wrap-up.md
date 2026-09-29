@@ -22,7 +22,10 @@ in the same places you already extend Umbraco: services, notifications, attribut
 
 ## What's next
 
-A few extension points we didn't have time for:
+Start with the bonus lesson: [**Lesson 7: Prompt templates**](lessons/lesson-7.md) moves prompt text out of C# into
+Liquid templates, with loops and conditions. It takes about 30 minutes and picks up where Lesson 6 left off.
+
+A few more extension points we didn't have time for:
 
 - **Custom providers.** Plug in any model service by implementing a provider and its capabilities.
 - **Guardrails.** Block, warn or redact on the way in or out, including your own evaluators.

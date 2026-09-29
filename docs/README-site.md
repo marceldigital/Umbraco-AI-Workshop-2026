@@ -34,6 +34,7 @@ One-time setup: **Settings → Pages → Build and deployment → Source = GitHu
 | `lessons/lesson-0.md` | Lesson 0: Setup (done in the room, 12:55–1:22) |
 | `lessons/lesson-1.md` … `lessons/lesson-6.md` | Lessons 1–6. The branch at the end of lesson *N* is `lesson-N-end` |
 | `wrap-up.md` | Wrap-up |
+| `lessons/lesson-7.md` | Lesson 7 (bonus, take-home): Prompt templates |
 | `troubleshooting.md` | Troubleshooting, including *How to jump to a lesson's end branch* |
 | `toc.yml` | Sidebar navigation **and** the Previous / Next order |
 | `images/` | Logo, favicon, and screenshots (`images/lesson-N/…`) |

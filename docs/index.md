@@ -42,6 +42,7 @@ hand-written calls with an agent, and finally let **Umbraco Automate** run the w
 | 4:09 | Lecture 7: Umbraco Automate + AI | 6 |
 | 4:15 | [**Lesson 6:** Hand the pipeline to Automate](lessons/lesson-6.md) | 20 |
 | 4:35 | [Wrap-up](wrap-up.md) | 5 |
+| **Take-home** | [**Lesson 7 (bonus):** Prompt templates](lessons/lesson-7.md) | ~30 |
 
 Every lesson is timeboxed. When time's up, anyone who hasn't finished checks out that lesson's end branch, and we all
 move on together. Finished early? Try the 🚀 stretch goals at the bottom of each lesson.
@@ -59,13 +60,14 @@ The client wants four things. Each lesson page has a **Requirements tracker** so
 
 The repository has one branch for the starting point and one for the end of every lesson:
 
-`init` → `lesson-1-end` → `lesson-2-end` → `lesson-3-end` → `lesson-4-end` → `lesson-5-end` → `lesson-6-end` → `main`
+`init` → `lesson-1-end` → `lesson-2-end` → `lesson-3-end` → `lesson-4-end` → `lesson-5-end` → `lesson-6-end` →
+`lesson-7-end` (bonus) → `main`
 
 | Branch | What's in it |
 |---|---|
 | `init` | The client's existing site. All the non-AI plumbing is built, but there are no AI packages, config or code yet. **You start here.** |
 | `lesson-N-end` | The finished state of lesson *N*: the code **and** a database snapshot with that lesson's backoffice configuration. |
-| `main` | The same as `lesson-6-end`, plus this documentation site. |
+| `main` | The same as `lesson-7-end`, plus this documentation site. |
 
 Fell behind, or something broke? Checking out a lesson's end branch catches you up completely. Follow
 [How to jump to a lesson's end branch](troubleshooting.md#how-to-jump-to-a-lessons-end-branch). It takes about a minute.
