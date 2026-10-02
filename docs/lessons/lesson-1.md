@@ -9,7 +9,7 @@
 
 Install Umbraco AI into The Rabbit Hole and set up the building blocks the rest of the workshop depends on:
 
-- a **connection** to your AI provider: OpenAI, Microsoft Foundry, or the workshop key
+- a **connection** to your AI provider: OpenAI or Microsoft Foundry
 - a **chat profile** and a **speech-to-text profile**
 - a **Brand Voice** context so everything the AI writes sounds like the show
 
@@ -52,8 +52,8 @@ dotnet add src/TheRabbitHole.Core package Umbraco.AI.Core --version 17.3.5
 > [!NOTE]
 > **Why the OpenAI provider?** Umbraco AI is provider-agnostic, but providers differ in what they can do. Today only the
 > OpenAI provider supports **speech-to-text**, which we need in Lesson 2. It also isn't limited to api.openai.com: it
-> works with any OpenAI-compatible endpoint, including Microsoft Foundry's. So the same provider serves all three
-> [key paths](../ai-key.md): OpenAI, your own Foundry, and the workshop key (which runs on Foundry).
+> works with any OpenAI-compatible endpoint, including Microsoft Foundry's. So the same provider serves both
+> [key paths](../ai-key.md): OpenAI and Microsoft Foundry.
 
 ### Step 3: Suppress the experimental speech-to-text warning
 
@@ -180,7 +180,7 @@ alias, `podcast-profile`, to write summaries and show notes.
 
 ### Step 8: Create the transcription connection and the Transcriber Profile
 
-On OpenAI, one endpoint does everything. Microsoft Foundry (and so the workshop key) serves **chat** through the
+On OpenAI, one endpoint does everything. Microsoft Foundry serves **chat** through the
 OpenAI-compatible endpoint you just used, but serves **transcription** only through a URL that points straight at the
 transcription deployment. That's your `TranscriptionEndpoint` secret.
 
@@ -228,7 +228,7 @@ both secrets hold the same URL.
 ![The Workshop Transcription connection with its endpoint set to the TranscriptionEndpoint reference](../images/lesson-1/04b-transcription-connection.png)
 
 > [!WARNING]
-> **On Foundry or the workshop key, Test Connection now fails on Workshop Transcription. That's expected.** The test
+> **On Foundry, Test Connection now fails on Workshop Transcription. That's expected.** The test
 > works by listing models, which the deployment URL can't do. Transcription itself works, and you'll prove it in Lesson 2.
 > The **Workshop** connection's test should still succeed. (On OpenAI, both tests succeed.)
 >
@@ -374,7 +374,7 @@ start answering.
 <details>
 <summary><strong>Test Connection fails on Workshop Transcription</strong></summary>
 
-Expected after Step 8c on Foundry or the workshop key. See the warning in that step. Only worry if **Workshop** fails too.
+Expected after Step 8c on Foundry. See the warning in that step. Only worry if **Workshop** fails too.
 
 </details>
 

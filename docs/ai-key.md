@@ -1,6 +1,6 @@
 ---
 title: Bring your AI key
-description: How to set up an OpenAI or Microsoft Foundry key for the workshop, or get the backup workshop key.
+description: How to set up an OpenAI or Microsoft Foundry key for the workshop.
 ---
 
 # Bring your AI key
@@ -10,22 +10,19 @@ The workshop calls two AI models:
 - **GPT-4.1** for chat: summaries, show notes, tool calls and the agent
 - **GPT-4o Transcribe** for speech-to-text: turning the episode audio into a transcript
 
-Please bring your own key if you can. You'll keep a working setup after the workshop, and 30 people won't be sharing one
-rate limit on conference Wi-Fi. There are three ways to take part:
+You'll need your own key from one of two providers:
 
 | Path | Choose it if… | What you'll need |
 |---|---|---|
 | **OpenAI** | You have, or can create, an OpenAI API account | An API key and a few dollars of prepaid credit |
 | **Microsoft Foundry** | Your company already uses Azure | An Azure subscription where you can create resources |
-| **Workshop key** (backup) | You can't use either of the above | Nothing. We'll send you a key through 1Password. |
 
 Whichever path you pick, you end up with **three values**: an **API key**, a **chat endpoint** and a **transcription
 endpoint**. In [Lesson 0, Step 8](lessons/lesson-0.md#8-save-your-key-and-endpoints-as-user-secrets) you store them as
 .NET user secrets, and every lesson branch picks them up from there.
 
 > [!NOTE]
-> Setting up your own account in the room works, but adding billing or deploying models can take a while. If you're in a
-> hurry, ask Alex for the workshop key and set up your own account later.
+> Adding billing (OpenAI) or deploying models (Foundry) can take a while, so set up your key before you start Lesson 0.
 
 > [!TIP]
 > **What will it cost?** Very little. Transcribing the four-minute episode costs a few cents each time, and a summary, the
@@ -68,11 +65,11 @@ Your three values:
 # [Microsoft Foundry](#tab/foundry)
 
 About 15–20 minutes. You need an Azure subscription where you're allowed to create resources. Some free-trial and
-sponsored subscriptions can't deploy these models. If yours can't, use the OpenAI path or the workshop key.
+sponsored subscriptions can't deploy these models. If yours can't, use the OpenAI path.
 
 1. **Create a Foundry project.** Sign in to the [Microsoft Foundry portal](https://ai.azure.com) and create a new
-   project. This also creates a Foundry resource to hold it. Choose the **East US 2** region, which has both models (the
-   workshop's own resource runs there). Make a note of the **resource name** you choose.
+   project. This also creates a Foundry resource to hold it. Choose the **East US 2** region, which has both models. Make
+   a note of the **resource name** you choose.
 2. **Deploy GPT-4.1.** Open the model catalog, find **gpt-4.1** and deploy it. Choose the **Global Standard** deployment
    type and **keep the deployment name as `gpt-4.1`**. If the portal says you're out of quota, lower the tokens-per-minute
    limit (50K is plenty) and try again.
@@ -106,22 +103,6 @@ Using a classic **Azure OpenAI** resource instead of a Foundry resource? That wo
 `https://<your-resource>.openai.azure.com` as the start of both endpoints.
 
 </details>
-
-# [Workshop key](#tab/workshop)
-
-If you don't have your own key, ask Alex. You'll get a **1Password link by email** with the workshop key and all three
-values.
-
-The workshop key runs on Marcel Digital's Microsoft Foundry resource, so it's shared by everyone using it. It stops working
-after the festival. Please don't commit it or paste it anywhere public.
-
-Your three values:
-
-| Value | What to use |
-|---|---|
-| API key | From the 1Password link |
-| Chat endpoint | `https://ais-umbusfest2026-eastus2.services.ai.azure.com/openai/v1/` |
-| Transcription endpoint | `https://ais-umbusfest2026-eastus2.services.ai.azure.com/openai/deployments/gpt-4o-transcribe?api-version=2025-03-01-preview` |
 
 ---
 

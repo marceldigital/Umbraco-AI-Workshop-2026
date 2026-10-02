@@ -21,7 +21,8 @@ conference Wi-Fi.
 > The lessons use `dotnet` CLI commands so they work in any editor on any OS. If you prefer Visual Studio or Rider, go for
 > it. You'll just translate the commands into your IDE.
 
-You'll also need an **AI key**: your own **OpenAI** or **Microsoft Foundry** key, or the workshop key. Step 8 covers it.
+You'll also need an **AI key**: your own **OpenAI** or **Microsoft Foundry** key. [Bring your AI key](../ai-key.md) shows
+how to get one, and Step 8 covers saving it.
 
 > [!IMPORTANT]
 > Missing the .NET 10 SDK? Start that download first, right now. It's the biggest thing on this page.
@@ -115,13 +116,11 @@ The code is in `src/TheRabbitHole.Web/AutoLogin/`, wired up by `.AddAutoLogin(bu
 
 ### 7. Find your AI key
 
-You need three values: an **API key**, a **chat endpoint** and a **transcription endpoint**. Where they come from depends on
-your path:
+You need three values: an **API key**, a **chat endpoint** and a **transcription endpoint**.
 
-- **Brought your own OpenAI or Microsoft Foundry key?** Use it with the endpoints in the tabs below.
-- **No key yet?** Tell Alex now. You'll get the workshop key by email through a 1Password link.
-- **Want to set up your own account now?** [Bring your AI key](../ai-key.md) has the steps, but adding billing or deploying
-  models takes a while. The workshop key gets you going straight away.
+- **Already have an OpenAI or Microsoft Foundry key?** Use it with the endpoints in the tabs below.
+- **No key yet?** [Bring your AI key](../ai-key.md) has the steps for both providers. Adding billing or deploying models
+  can take a while, so leave the site running and come back here when you have your key.
 
 ### 8. Save your key and endpoints as user secrets
 
@@ -163,25 +162,6 @@ dotnet user-secrets set "Umbraco:AI:Variables:TranscriptionEndpoint" "https://<y
 Foundry serves chat on its OpenAI-compatible `/openai/v1/` endpoint, but transcription only on the deployment's own URL.
 That's why the two variables differ. Lesson 1 shows how the connections handle it.
 
-# [Workshop key](#tab/workshop)
-
-Use the key from your 1Password link. The link has these commands ready to copy, too.
-
-```bash
-dotnet user-secrets set "Umbraco:AI:Secrets:ApiKey" "<the-workshop-key>" --project src/TheRabbitHole.Web
-```
-
-```bash
-dotnet user-secrets set "Umbraco:AI:Variables:ChatEndpoint" "https://ais-umbusfest2026-eastus2.services.ai.azure.com/openai/v1/" --project src/TheRabbitHole.Web
-```
-
-```bash
-dotnet user-secrets set "Umbraco:AI:Variables:TranscriptionEndpoint" "https://ais-umbusfest2026-eastus2.services.ai.azure.com/openai/deployments/gpt-4o-transcribe?api-version=2025-03-01-preview" --project src/TheRabbitHole.Web
-```
-
-The workshop key runs on Microsoft Foundry, which serves chat and transcription on different URLs. That's why the two
-variables differ. Lesson 1 shows how the connections handle it.
-
 ---
 
 User secrets live in your user profile, not in the repository, so they can't be committed by accident, and they stay put
@@ -193,7 +173,7 @@ reads them.
 - ⬜ The homepage lists 4 episodes, including **The 500th Question**.
 - ⬜ The backoffice opens without asking you to log in, and **Content → Home → Episodes** shows the same 4 episodes.
 - ⬜ The top navigation has *no* **AI** section yet. That's what we'll add in Lesson 1.
-- ⬜ You've saved your three user secrets, or you've asked Alex for the workshop key.
+- ⬜ You've saved your three user secrets.
 
 ## 🧯 Troubleshooting
 

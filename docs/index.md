@@ -75,6 +75,6 @@ Fell behind, or something broke? Checking out a lesson's end branch catches you 
 ## Start here
 
 Sit down, open a terminal, and start setting up. The downloads run while the first lecture is on. If you don't have an AI
-key yet, [Bring your AI key](ai-key.md) explains your options, or just ask Alex for the workshop key.
+key yet, [Bring your AI key](ai-key.md) explains your options.
 
 <p><a class="btn btn-primary btn-lg" href="lessons/lesson-0.md">Start with Lesson 0: Setup →</a></p>

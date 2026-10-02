@@ -702,8 +702,8 @@ tells you what went wrong. The usual suspects:
   **Transcriber Profile** in **AI → Settings** ([Lesson 1, Step 11](lesson-1.md#step-11-set-the-default-speech-to-text-profile)).
 - **The transcription connection.** Transcription goes through the **Workshop Transcription** connection, whose endpoint
   must be `$Umbraco:AI:Variables:TranscriptionEndpoint`
-  ([Lesson 1, Step 8](lesson-1.md#step-8-create-the-transcription-connection-and-the-transcriber-profile)). On Foundry
-  or the workshop key, that user secret must be the transcription **deployment** URL, not the `/openai/v1/` endpoint.
+  ([Lesson 1, Step 8](lesson-1.md#step-8-create-the-transcription-connection-and-the-transcriber-profile)). On Foundry,
+  that user secret must be the transcription **deployment** URL, not the `/openai/v1/` endpoint.
 - **A user secret is missing.** Check the key is stored under exactly `Umbraco:AI:Secrets:ApiKey` and both endpoints
   under `Umbraco:AI:Variables`, then restart the site.
 

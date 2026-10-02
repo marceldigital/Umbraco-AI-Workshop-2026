@@ -85,7 +85,7 @@ header {
   padding-left: .5rem;
 }
 
-/* Tabs (the OpenAI / Foundry / workshop key choices): selected tab gets the festival teal. */
+/* Tabs (the OpenAI / Foundry choices): selected tab gets the festival teal. */
 .tabGroup a[role="tab"][aria-selected="true"] {
   border-bottom-color: var(--fest-teal) !important;
   color: var(--bs-link-color);
